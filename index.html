@@ -160,7 +160,7 @@
             display: block;
             text-align: center;
             margin-top: 1rem;
-            background: var(--primary);
+            background: var(--secondary);
             color: #fff;
             border: none;
             border-radius: 1em;
@@ -168,6 +168,25 @@
             font-size: 1em;
             cursor: pointer;
             text-decoration: none;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0.3em;
+            right: 1.2em;
+            background: #ff3b30;
+            color: #fff;
+            border-radius: 50%;
+            min-width: 1.3em;
+            height: 1.3em;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
 
         .section-buttons {
@@ -175,6 +194,16 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
+        }
+        .map-container {
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(120deg, #e0e7ef 60%, #b2fefa 100%);
+            border-radius: var(--radius);
+            margin: 1.5rem 0 2rem 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
 
         .section-card {
@@ -205,6 +234,11 @@
         @media (max-width: 600px) {
             .section-buttons {
                 grid-template-columns: 1fr;
+
+            .map-container {
+                height: 180px;
+            }
+
             }
         }
     </style>
@@ -230,16 +264,46 @@
                 <ul id="community-board-list">
                     <li>No posts or announcements available.</li>
                 </ul>
-                <a href="#" class="my-announcements-button">My Announcements</a>
+                <div class="community-board-buttons" style="display: flex; gap: 1em; justify-content: center; margin-top: 1rem;">
+                    <a href="#" class="my-announcements-button" id="city-news-btn" style="flex:1;">City News</a>
+                    <a href="#" class="my-announcements-button" id="paid-adverts-btn" style="flex:1;">Paid Adverts</a>
+                    <a href="#" class="my-announcements-button" id="my-adverts-btn" style="flex:1; position:relative;">
+                        My Adverts
+                        <span id="my-adverts-badge" class="notification-badge" style="display:none;">0</span>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="section-buttons">
-            <div class="section-card" id="resources-card">
-                <h2><i class="fa-solid fa-list"></i> Resources</h2>
-                <p>Find a list of available emergency resources in your community.</p>
-            </div>
+
+    </div>
+
+    <div class="container">
+        <div class="map-container">
+            <div id="map"></div>
+            <span id="map-placeholder" style="display:none;">Interactive Map Placeholder (Mapbox/Google Maps)</span>
         </div>
+
+        <div id="marker-filters" style="margin: 1em 0; text-align:center;">
+        <div style="display:inline-block; margin-right:2em;">
+            <strong>Public resources:</strong>
+            <label><input type="checkbox" class="filter-checkbox" value="water" checked> 💧 Water</label>
+            <label><input type="checkbox" class="filter-checkbox" value="aed" checked> ❤️ AED</label>
+            <label><input type="checkbox" class="filter-checkbox" value="atm" checked> 🏧 ATM</label>
+            <label><input type="checkbox" class="filter-checkbox" value="medical" checked> 🏥 Medical</label>
+            <label><input type="checkbox" class="filter-checkbox" value="fuel" checked> ⛽ Fuel</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Playgrounds" checked>  Playgrounds</label>
+
+        </div>
+        <div style="display:inline-block;">
+            <strong>Community resources:</strong>
+            <label><input type="checkbox" class="filter-checkbox" value="Food" checked> 🍏 Food</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Car" checked> 🚗 Car share</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Pet" checked> 🐕 Dog walking</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Other" checked>🛟 Other</label>
+        </div>
+        </div>
+
     </div>
 
     <script>
@@ -390,344 +454,71 @@
                 return;
             }
 
-            // Here you would normally send to a backend
-            alert('Registered successfully! Please log in.');
-            document.querySelector('[data-tab="login"]').click();
+            filtered.forEach(item => {
+                const listItem = document.createElement('li');
+                let meta = item.date;
+                if (item.author) meta += ' • ' + item.author;
+
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${item.title}</strong><br>
+                        <span style="font-size:0.95em;color:#555;">${item.content}</span><br>
+                        <span class="date" style="font-size:0.85em;color:#888;">${meta}</span>
+                    </div>
+                    ${item.type !== 'announcement' ? '<button class="reply-button">Reply</button>' : ''}
+                `;
+
+                boardList.appendChild(listItem);
+            });
         }
 
-        // Handle logout
-        logoutBtn.onclick = () => {
-            isLoggedIn = false;
-            loginBtn.style.display = 'block';
-            adminPanel.style.display = 'none';
-            alert('Logged out successfully!');
-        }
+        // Example: Set this to the number of new messages for "My Adverts"
+        let myAdvertsMessages = 2; // Set to 0 for no badge
 
-        // Handle adding new resource
-        function handleAddResource() {
-            const type = document.getElementById('resourceType').value;
-            const name = document.getElementById('resourceName').value;
-            const location = document.getElementById('resourceLocation').value;
-            const lat = document.getElementById('resourceLat').value;
-            const lng = document.getElementById('resourceLng').value;
-            const status = document.getElementById('resourceStatus').value;
-            const description = document.getElementById('resourceDescription').value;
-
-            if (type && name && location && lat && lng && status) {
-                // Here you would normally send to a backend
-                alert('Resource added successfully!');
-                resourceModal.style.display = 'none';
+        function updateMyAdvertsBadge() {
+            const badge = document.getElementById('my-adverts-badge');
+            if (myAdvertsMessages > 0) {
+                badge.textContent = myAdvertsMessages;
+                badge.style.display = 'flex';
             } else {
-                alert('Please fill in all required fields!');
+                badge.style.display = 'none';
             }
         }
-        
-    </script>
-    <script>
-        // Initialize the Leaflet map
-        const map = L.map('map').setView([39.47, -0.38], 13); // Centered on Valencia
 
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Fetch locations from API and add to map
-        fetch('https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/fonts-daigua-publica-fuentes-de-agua-publica/records?limit=20') // Replace with your real API URL
-            .then(response => response.json())
-            .then(data => {
-                data.results.forEach(item => {
-                    const markerData = {
-                        lat: item.geo_point_2d.lat,
-                        lng: item.geo_point_2d.lon,
-                        type: 'water',
-                        comment: item.calle,
-                        thumbs: 0,
-                        foto: item.foto // Optional: use in popup
-                    };
-                    addMarker(markerData, false);
-                });
-            })
-            .catch(err => {
-                console.error('Failed to load locations:', err);
-            });
-
-        // On map click: prompt for water/AED
-        map.on('click', function(e) {
-        // Remove any existing temp marker
-        if (window.tempMarker) {
-            map.removeLayer(window.tempMarker);
-        }
-
-        // Place a temporary marker
-        window.tempMarker = L.marker(e.latlng).addTo(map);
-
-        // Popup HTML for public/private selection
-        const popupHtml = `
-            <div>
-                <strong>Add Resource</strong><br>
-                <button id="publicBtn">Public</button>
-                <button id="privateBtn">Private</button>
-            </div>
-        `;
-
-        window.tempMarker.bindPopup(popupHtml).openPopup();
-
-        // Wait for popup to open, then attach event listeners
-        setTimeout(() => {
-            const publicBtn = document.getElementById('publicBtn');
-            const privateBtn = document.getElementById('privateBtn');
-            if (publicBtn) {
-                publicBtn.onclick = (e) => {
-                    L.DomEvent.stopPropagation(e);
-                    e.stopPropagation();
-                    showTypeSelection(window.tempMarker.getLatLng(), 'Public');
-                };
-            }
-            if (privateBtn) {
-                privateBtn.onclick = (e) => {
-                    L.DomEvent.stopPropagation(e);
-                    e.stopPropagation();
-                    showTypeSelection(window.tempMarker.getLatLng(), 'Community');
-                };
-            }
-        }, 100);
-    });
-
-        const allMarkers = []; // Store all markers with their type
-
-function addMarker(data, save) {
-    const icon = L.divIcon({
-        className: "custom-icon",
-        html: `<span style="font-size:18px;line-height:1;">${
-            data.type === "water" ? "💧"
-            : data.type === "aed" ? "❤️"
-            : data.type === "atm" ? "🏧"
-            : data.type === "medical" ? "🏥"
-            : data.type === "fuel" ? "⛽"
-            : data.type === "fruit" ? "🍏"
-            : data.type === "car" ? "🚗"
-            : data.type === "pet" ? "🐕"
-            : data.type === "other" ? "🛟"
-            : "❓"
-        }</span>`,
-        iconSize: [48, 48],
-        iconAnchor: [24, 24],
-    });
-
-    const label = data.type === "water" ? "💧 Water Source"
-        : data.type === "aed" ? "❤️ AED"
-        : data.type === "atm" ? "🏧 ATM"
-        : data.type === "medical" ? "🏥 Medical"
-        : data.type === "fuel" ? "⛽ Fuel"
-        : data.type === "fruit" ? "🍏 Food"
-        : data.type === "car" ? "🚗 Car"
-        : data.type === "pet" ? "🐕 Dog walking"
-        : data.type === "other" ? "🛟 Other"
-        : "❓";
-
-    // Show "Need" and "Give" if present
-    let needGive = "";
-    if (data.need || data.give) {
-        needGive += `<div>`;
-        if (data.need) needGive += `<span style="color:#ff3b30;">🟧 Need</span><br>`;
-        if (data.give) needGive += `<span style="color:#00adb5;">🟩 Give</span><br>`;
-        needGive += `</div>`;
-    }
-
-    const id = `${data.lat},${data.lng}`;
-    // Check if this is a community marker
-    const isCommunity = ["fruit", "car", "pet", "other"].includes(data.type);
-
-    const chatBtn = isCommunity
-        ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
-        : "";
-
-    const html = `
-        <div class="popup">
-        <strong>${label}</strong><br>
-        ${needGive}
-        ${data.comment || "<i>No comment</i>"}<br>
-        ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
-        <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
-        ${chatBtn}
-        </div>`;
-
-    const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
-    marker.bindPopup(html);
-
-    // Store marker and its type for filtering
-    allMarkers.push({ marker, type: data.type.toLowerCase() });
-
-    if (save) {
-        stored.push(data);
-        localStorage.setItem("markers", JSON.stringify(stored));
-    }
-}
-
-function thumb(id) {
-    // Find the marker data by id
-    const markerObj = allMarkers.find(obj => `${obj.marker.getLatLng().lat},${obj.marker.getLatLng().lng}` === id);
-    if (markerObj) {
-        // Update thumbs count in data
-        if (!markerObj.marker._thumbs) markerObj.marker._thumbs = 0;
-        markerObj.marker._thumbs++;
-        // Update popup display
-        const el = document.getElementById('thumbs-' + id);
-        if (el) el.textContent = markerObj.marker._thumbs;
-        // Optionally update localStorage if you want persistence
-    }
-}
-
-// Add this function globally (for now it just alerts, you can replace with your chat logic)
-function startChat(id) {
-    alert("Chat feature coming soon for marker: " + id);
-}
-    </script>
-
-    <script>
-
-    // Close modal
-    document.getElementById('closeAddMarkerModal').onclick = function() {
-        document.getElementById('addMarkerModal').style.display = 'none';
-    };
-
-    // Handle form submit
-    document.getElementById('addMarkerForm').onsubmit = function(ev) {
-        ev.preventDefault();
-        const lat = parseFloat(document.getElementById('markerLat').value);
-        const lng = parseFloat(document.getElementById('markerLng').value);
-        const type = document.getElementById('markerType').value;
-        const comment = document.getElementById('markerComment').value;
-        const foto = document.getElementById('markerPhoto').value;
-        const marker = { lat, lng, type, comment, thumbs: 0, foto };
-        addMarker(marker, true);
-        document.getElementById('addMarkerModal').style.display = 'none';
-        document.getElementById('addMarkerForm').reset();
-    };
-
-    // Optional: close modal when clicking outside
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('addMarkerModal')) {
-            document.getElementById('addMarkerModal').style.display = "none";
-        }
-    };
-</script>
-
-    <script>
-        // Filtering logic
-        document.querySelectorAll('.filter-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
-                const enabledTypes = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => cb.value);
-                allMarkers.forEach(obj => {
-                    if (enabledTypes.includes(obj.type)) {
-                        map.addLayer(obj.marker);
-                    } else {
-                        map.removeLayer(obj.marker);
-                    }
-                });
-            });
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNews();
+            loadCommunityBoard();
+            updateMyAdvertsBadge();
         });
-    </script>
-    <script>
-        function showTypeSelection(latlng, accessType) {
-    // Define icons for each access type
-    const publicIcons = [
-        { type: 'water', icon: '💧' },
-        { type: 'aed', icon: '❤️' },
-        { type: 'atm', icon: '🏧' },
-        { type: 'medical', icon: '🏥' },
-        { type: 'fuel', icon: '⛽' }
-    ];
-    const communityIcons = [
-        { type: 'fruit', icon: '🍏' },
-        { type: 'car', icon: '🚗' },
-        { type: 'pet', icon: '🐕' },
-        { type: 'other', icon: '🛟' }
-    ];
 
-    // Pick which icons to show
-    const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
-
-    let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
-    icons.forEach(i => {
-        html += `<button class="icon-btn" data-type="${i.type}">${i.icon}</button> `;
-    });
-    html += `</div>`;
-
-    window.tempMarker.setPopupContent(html).openPopup();
-
-    setTimeout(() => {
-        // Prevent map click from firing when clicking inside the popup
-        const popupContent = document.getElementById('popup-content');
-        if (popupContent) {
-            popupContent.addEventListener('mousedown', function(e) {
-                L.DomEvent.stopPropagation(e);
-            });
-            popupContent.addEventListener('click', function(e) {
-                L.DomEvent.stopPropagation(e);
-            });
-        }
-        document.querySelectorAll('.icon-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                showCommentForm(latlng, accessType, btn.dataset.type);
-            };
-        });
-    }, 100);
-}
-
-function showCommentForm(latlng, accessType, type) {
-    // Only show checkboxes for community/private
-    const isCommunity = accessType.toLowerCase() === 'community';
-    const checkboxes = isCommunity ? `
-        <label><input type="checkbox" id="needBox"> Need</label>
-        <label><input type="checkbox" id="giveBox"> Give</label><br>
-    ` : '';
-
-    const html = `
-        <div>
-            <strong>Add Details</strong><br>
-            ${checkboxes}
-            <input type="text" id="markerComment" placeholder="Optional comment"><br>
-            <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
-            <button id="addMarkerBtn">Add Marker</button>
-        </div>
-    `;
-    window.tempMarker.setPopupContent(html).openPopup();
-
-    setTimeout(() => {
-        document.getElementById('addMarkerBtn').onclick = () => {
-            const comment = document.getElementById('markerComment').value;
-            const foto = document.getElementById('markerPhoto').value;
-            // Get checkbox values if community
-            let need = false, give = false;
-            if (isCommunity) {
-                need = document.getElementById('needBox').checked;
-                give = document.getElementById('giveBox').checked;
-            }
-            // Remove the temp marker first
-            if (window.tempMarker) {
-                map.removeLayer(window.tempMarker);
-                window.tempMarker = null;
-            }
-            // Add the permanent marker with the selected icon and options
-            const marker = {
-                lat: latlng.lat,
-                lng: latlng.lng,
-                type: type.toLowerCase(),
-                comment,
-                thumbs: 0,
-                foto,
-                access: accessType,
-                need,
-                give
-            };
-            addMarker(marker, true);
+        // Navigation
+        document.getElementById('resources-card').onclick = () => {
+            window.location.href = 'full-view.html';
         };
-    }, 100);
-}
+
+        // My Announcements button
+        // document.querySelector('.community-board .my-announcements-button').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     alert('Navigating to "My Announcements" page (not implemented yet)');
+        //     // In a real implementation, you would navigate to a page where the user can manage their announcements
+        // });
+
+        // Add handlers for the new buttons
+        document.getElementById('city-news-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "City News" (not implemented yet)');
+        });
+        document.getElementById('paid-adverts-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "Paid Adverts" (not implemented yet)');
+        });
+        document.getElementById('my-adverts-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "My Adverts" (not implemented yet)');
+        });
     </script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </body>
 
 </html>

@@ -539,20 +539,6 @@
         <p id="app-desc">Emergency Resource Locator & Community Safety (2025)</p>
     </div>
     <div class="container">
-        <div class="user-type-selector">
-            <button class="user-type-btn active" data-type="resident"><i class="fa-solid fa-user"></i> <span
-                    class="ut-resident">Local Resident</span></button>
-            <button class="user-type-btn" data-type="tourist"><i class="fa-solid fa-earth-europe"></i> <span
-                    class="ut-tourist">Tourist</span></button>
-            <button class="user-type-btn" data-type="municipality"><i class="fa-solid fa-city"></i> <span
-                    class="ut-municipality">Municipality</span></button>
-            <button class="user-type-btn" data-type="contact"><i class="fa-solid fa-heart"></i> <span
-                    class="ut-contact">Emergency Contact</span></button>
-            <a href="admin.html" class="user-type-btn" data-type="admin">
-                <i class="fa-solid fa-circle-plus"></i>
-                <span class="ut-admin">Lisa või muuda hädaabi infot</span>
-            </a>
-        </div>
         <div class="map-container">
             <div id="map"></div>
             <span id="map-placeholder" style="display:none;">Interactive Map Placeholder (Mapbox/Google Maps)</span>
@@ -566,6 +552,8 @@
             <label><input type="checkbox" class="filter-checkbox" value="atm" checked> 🏧 ATM</label>
             <label><input type="checkbox" class="filter-checkbox" value="medical" checked> 🏥 Medical</label>
             <label><input type="checkbox" class="filter-checkbox" value="fuel" checked> ⛽ Fuel</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Playgrounds" checked>  Playgrounds</label>
+
         </div>
         <div style="display:inline-block;">
             <strong>Community resources:</strong>
@@ -576,33 +564,6 @@
         </div>
         </div>
 
-        <div class="resource-grid">
-            <h3 style="grid-column:1/-1;">Emergency Resources</h3>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-faucet"></i> <span class="rc-water">Water Supply</span></h3>
-                <p class="rc-water-location">Central Park</p>
-                <p class="rc-water-distance">0.5 km</p>
-                <span class="status available rc-water-status">Available</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-bolt"></i> <span class="rc-generator">Generator Station</span></h3>
-                <p class="rc-generator-location">Main Street</p>
-                <p class="rc-generator-distance">0.8 km</p>
-                <span class="status partial rc-generator-status">Low Fuel</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-kit-medical"></i> <span class="rc-medical">Medical Center</span></h3>
-                <p class="rc-medical-location">Hospital District</p>
-                <p class="rc-medical-distance">2.1 km</p>
-                <span class="status available rc-medical-status">Available</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-gas-pump"></i> <span class="rc-fuel">Emergency Fuel</span></h3>
-                <p class="rc-fuel-location">24/7 Gas Station</p>
-                <p class="rc-fuel-distance">1.7 km</p>
-                <span class="status unavailable rc-fuel-status">Unavailable</span>
-            </div>
-        </div>
     </div>
     <button class="emergency-button"><i class="fa-solid fa-siren-on"></i> <span class="sos-btn">EMERGENCY
             SOS</span></button>
