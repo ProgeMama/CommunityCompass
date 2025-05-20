@@ -1,77 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Compass 2025</title>
+    <title>Community Compass - Landing Page</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         :root {
             --primary: #ff3b30;
             --secondary: #222831;
             --accent: #00adb5;
             --bg: antiquewhite;
-            /* või #fdf6e3 */
             --glass: rgba(255, 255, 255, 0.7);
             --glass-dark: rgba(34, 40, 49, 0.7);
             --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
             --radius: 22px;
-            --transition: 0.3s cubic-bezier(.4, 2, .6, 1);
-        }
-
-        /* ... */
-
-        .user-type-selector {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0 1rem 0;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .user-type-btn {
-            background: var(--glass);
-            border: none;
-            border-radius: var(--radius);
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            color: var(--secondary);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
-            text-decoration: none;
-            /* Lisa see, et link ei oleks allajoonitud */
-        }
-
-        .user-type-btn.active,
-        .user-type-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 24px 0 rgba(255, 59, 48, 0.18);
-        }
-
-
-        /* Väiksematel ekraanidel võib vaja olla kohandada */
-        @media (max-width: 600px) {
-            .user-type-selector {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .admin-link {
-                margin-left: 0;
-                margin-top: 1rem;
-                justify-content: flex-end;
-            }
         }
 
         body {
@@ -80,768 +25,368 @@
             margin: 0;
             min-height: 100vh;
             color: var(--secondary);
-            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
         }
 
         .header {
             background: linear-gradient(90deg, var(--primary), var(--accent));
             color: #fff;
-            padding: 2rem 0 1rem 0;
+            padding: 1.5rem;
             text-align: center;
-            border-radius: 0 0 var(--radius) var(--radius);
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            letter-spacing: 0.02em;
-            position: relative;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 2rem;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.3em;
-            letter-spacing: 0.04em;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.85;
-        }
-
-        .lang-select {
-            position: absolute;
-            top: 1.2rem;
-            right: 2rem;
-            background: var(--glass);
-            border-radius: 1.2em;
-            padding: 0.3em 1em;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-            font-size: 1em;
-            z-index: 10;
-        }
-
-        .lang-select select {
-            background: transparent;
-            border: none;
-            font-size: 1em;
-            color: #222;
-            outline: none;
-            cursor: pointer;
-            font-family: inherit;
+            font-size: 2rem;
+            margin: 0;
         }
 
         .container {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            width: 90%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
-        .user-type-selector {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .user-type-btn {
+        .info-section {
             background: var(--glass);
-            border: none;
             border-radius: var(--radius);
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            color: var(--secondary);
             box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+            padding: 1.5rem;
             backdrop-filter: blur(8px);
+        }
+
+        .info-section h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.7em;
+            gap: 0.5rem;
         }
 
-        .user-type-btn.active,
-        .user-type-btn:hover {
+        .news-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .news-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .news-item.official {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .news-item.expanded {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .news-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        .news-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #555;
+            display: none;
+        }
+
+        .news-item.expanded p {
+            display: block;
+        }
+
+        .news-item .date {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .community-board {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .community-board h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .community-board ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .community-board li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1em;
+        }
+
+        .community-board li:last-child {
+            border-bottom: none;
+        }
+
+        .community-board .reply-button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 1em;
+            padding: 0.3em 0.8em;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .community-board .my-announcements-button {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
             background: var(--primary);
             color: #fff;
-            box-shadow: 0 4px 24px 0 rgba(255, 59, 48, 0.18);
+            border: none;
+            border-radius: 1em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        .map-container {
-            width: 100%;
-            height: 320px;
-            background: linear-gradient(120deg, #e0e7ef 60%, #b2fefa 100%);
-            border-radius: var(--radius);
-            margin: 1.5rem 0 2rem 0;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            border-radius: var(--radius);
-            z-index: 1;
-        }
-
-        .map-mockup {
-            color: #888;
-            font-size: 1.2rem;
-            opacity: 0.7;
-            z-index: 2;
-        }
-
-        .resource-grid {
+        .section-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-            margin-top: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
         }
 
-        .resource-card {
+        .section-card {
             background: var(--glass);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 1.5rem 1.2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.7em;
+            padding: 1.5rem;
             backdrop-filter: blur(8px);
-            position: relative;
-            transition: box-shadow var(--transition), transform var(--transition);
-        }
-
-        .resource-card:hover {
-            box-shadow: 0 8px 32px 0 rgba(0, 173, 181, 0.18);
-            transform: translateY(-4px) scale(1.02);
-        }
-
-        .resource-card h3 {
-            margin: 0 0 0.2em 0;
-            font-size: 1.2rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-        }
-
-        .resource-card p {
-            margin: 0.1em 0;
-            font-size: 1em;
-            color: #333;
-            opacity: 0.85;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 0.4em 1.1em;
-            border-radius: 1em;
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-top: 0.5em;
-            letter-spacing: 0.02em;
-            background: #e0e7ef;
-            color: #222;
-            transition: background var(--transition), color var(--transition);
-        }
-
-        .status.available {
-            background: #d1fae5;
-            color: #059669;
-        }
-
-        .status.unavailable {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .status.partial {
-            background: #fef9c3;
-            color: #b45309;
-        }
-
-        .emergency-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff;
-            padding: 1.2em 2.5em;
-            border-radius: 2em;
-            border: none;
-            font-size: 1.2em;
-            font-weight: 700;
-            box-shadow: 0 8px 32px 0 rgba(255, 59, 48, 0.18);
+            text-align: center;
+            transition: transform 0.3s ease;
             cursor: pointer;
-            z-index: 100;
-            transition: background var(--transition), box-shadow var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
         }
 
-        .emergency-button:hover {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            box-shadow: 0 12px 40px 0 rgba(0, 173, 181, 0.18);
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-card h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-card p {
+            color: var(--secondary);
+            opacity: 0.8;
         }
 
         @media (max-width: 600px) {
-            .container {
-                padding: 0 0.3rem;
-            }
-
-            .map-container {
-                height: 180px;
-            }
-
-            .emergency-button {
-                padding: 1em 1.5em;
-                font-size: 1em;
-                right: 10px;
-                bottom: 10px;
-            }
-
-            .lang-select {
-                right: 1rem;
-                top: 0.7rem;
-            }
-
-            /* Persona buttons enhancement */
-            .user-type-selector {
-                background: var(--glass);
-                padding: 1.5rem;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-                margin: 2rem auto;
-                max-width: 900px;
-            }
-
-            .user-type-btn {
-                min-width: 200px;
-                padding: 1rem 2rem;
-                font-size: 1.1rem;
-                border: 2px solid transparent;
-            }
-
-            .user-type-btn:hover {
-                border-color: var(--accent);
-                transform: translateY(-2px);
-            }
-
-            /* Auth styles */
-            .auth-container {
-                position: absolute;
-                top: 1.2rem;
-                left: 2rem;
-                z-index: 10;
-            }
-
-            .auth-btn {
-                background: var(--glass);
-                border: none;
-                border-radius: 1.2em;
-                padding: 0.7em 1.5em;
-                color: var(--secondary);
-                cursor: pointer;
-                font-size: 1em;
-                display: flex;
-                align-items: center;
-                gap: 0.5em;
-                transition: all 0.3s ease;
-            }
-
-            .auth-btn:hover {
-                background: var(--primary);
-                color: white;
-            }
-
-            /* Modal styles */
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1000;
-            }
-
-            .modal-content {
-                position: relative;
-                background: var(--bg);
-                margin: 5% auto;
-                padding: 2rem;
-                width: 90%;
-                max-width: 500px;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-            }
-
-            .close {
-                position: absolute;
-                right: 1rem;
-                top: 1rem;
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-
-            .auth-form {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                margin-top: 1rem;
-            }
-
-            .auth-form input,
-            .auth-form select,
-            .auth-form textarea {
-                padding: 0.8rem;
-                border: 1px solid #ddd;
-                border-radius: 0.5rem;
-                font-size: 1rem;
-            }
-
-            .auth-tabs {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .auth-tab {
-                padding: 0.5rem 1rem;
-                cursor: pointer;
-                border: none;
-                background: var(--glass);
-                border-radius: 0.5rem;
-            }
-
-            .auth-tab.active {
-                background: var(--primary);
-                color: white;
-            }
-
-            .submit-btn {
-                background: var(--primary);
-                color: white;
-                border: none;
-                padding: 1rem;
-                border-radius: 0.5rem;
-                cursor: pointer;
-                font-size: 1rem;
-                font-weight: bold;
-            }
-
-
-
-            @media (max-width: 600px) {
-                .admin-button-big {
-                    font-size: 1em;
-                    padding: 1em 1.2em;
-                }
+            .section-buttons {
+                grid-template-columns: 1fr;
             }
         }
-
-        /* Add this to your <style> section if you want popup buttons to be a bit smaller */
-.popup .user-type-btn {
-    font-size: 1em;
-    padding: 0.5em 1.2em;
-    margin: 0.3em 0;
-    width: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-}
-
-/* Nicer filter checkboxes under the map */
-#marker-filters {
-    margin: 1.5em 0;
-    text-align: center;
-    background: var(--glass);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.2em 2em;
-    display: inline-block;
-}
-
-#marker-filters strong {
-    font-size: 1.1em;
-    color: var(--primary);
-    margin-right: 1em;
-}
-
-#marker-filters label {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(0,0,0,0.03);
-    border-radius: 1.2em;
-    padding: 0.4em 1em 0.4em 0.7em;
-    margin: 0.2em 0.5em 0.2em 0;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    border: 1.5px solid transparent;
-}
-
-#marker-filters label:hover, #marker-filters input:focus + label {
-    background: var(--accent);
-    color: #fff;
-}
-
-#marker-filters input[type="checkbox"] {
-    accent-color: var(--primary);
-    width: 1.1em;
-    height: 1.1em;
-    margin-right: 0.5em;
-    border-radius: 0.3em;
-    border: 1.5px solid #bbb;
-    cursor: pointer;
-    transition: border 0.2s;
-}
-
-#marker-filters input[type="checkbox"]:checked + label {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-}
-
-#marker-filters > div {
-    margin-bottom: 0.5em;
-}
-
-@media (max-width: 600px) {
-    #marker-filters {
-        padding: 1em 0.5em;
-        font-size: 0.98em;
-    }
-    #marker-filters label {
-        font-size: 0.98em;
-        padding: 0.3em 0.7em 0.3em 0.5em;
-    }
-}
     </style>
 </head>
 
 <body>
-
-
     <div class="header">
-        <div class="lang-select">
-            <i class="fa-solid fa-globe"></i>
-            <select id="lang">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="et">Eesti</option>
-            </select>
-        </div>
-        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
-        <p id="app-desc">Emergency Resource Locator & Community Safety (2025)</p>
+        <h1><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
     </div>
+
     <div class="container">
-        <div class="user-type-selector">
-            <button class="user-type-btn active" data-type="resident"><i class="fa-solid fa-user"></i> <span
-                    class="ut-resident">Local Resident</span></button>
-            <button class="user-type-btn" data-type="tourist"><i class="fa-solid fa-earth-europe"></i> <span
-                    class="ut-tourist">Tourist</span></button>
-            <button class="user-type-btn" data-type="municipality"><i class="fa-solid fa-city"></i> <span
-                    class="ut-municipality">Municipality</span></button>
-            <button class="user-type-btn" data-type="contact"><i class="fa-solid fa-heart"></i> <span
-                    class="ut-contact">Emergency Contact</span></button>
-            <a href="admin.html" class="user-type-btn" data-type="admin">
-                <i class="fa-solid fa-circle-plus"></i>
-                <span class="ut-admin">Lisa või muuda hädaabi infot</span>
-            </a>
-        </div>
-        <div class="map-container">
-            <div id="map"></div>
-            <span id="map-placeholder" style="display:none;">Interactive Map Placeholder (Mapbox/Google Maps)</span>
+        <div class="info-section">
+            <h2><i class="fa-solid fa-info-circle"></i> Public Announcements</h2>
+            <div class="news-feed" id="news-feed">
+                <div class="news-item">
+                    <h3>Loading news...</h3>
+                    <p>Please wait while we fetch the latest updates.</p>
+                </div>
+            </div>
+
+            <div class="community-board">
+                <h3>Community Board</h3>
+                <ul id="community-board-list">
+                    <li>No posts or announcements available.</li>
+                </ul>
+                <a href="#" class="my-announcements-button">My Announcements</a>
+            </div>
         </div>
 
-        <div id="marker-filters" style="margin: 1em 0; text-align:center;">
-        <div style="display:inline-block; margin-right:2em;">
-            <strong>Public resources:</strong>
-            <label><input type="checkbox" class="filter-checkbox" value="water" checked> 💧 Water</label>
-            <label><input type="checkbox" class="filter-checkbox" value="aed" checked> ❤️ AED</label>
-            <label><input type="checkbox" class="filter-checkbox" value="atm" checked> 🏧 ATM</label>
-            <label><input type="checkbox" class="filter-checkbox" value="medical" checked> 🏥 Medical</label>
-            <label><input type="checkbox" class="filter-checkbox" value="fuel" checked> ⛽ Fuel</label>
-        </div>
-        <div style="display:inline-block;">
-            <strong>Community resources:</strong>
-            <label><input type="checkbox" class="filter-checkbox" value="Food" checked> 🍏 Food</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Car" checked> 🚗 Car share</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Pet" checked> 🐕 Dog walking</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Other" checked>🛟 Other</label>
-        </div>
-        </div>
-
-        <div class="resource-grid">
-            <h3 style="grid-column:1/-1;">Emergency Resources</h3>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-faucet"></i> <span class="rc-water">Water Supply</span></h3>
-                <p class="rc-water-location">Central Park</p>
-                <p class="rc-water-distance">0.5 km</p>
-                <span class="status available rc-water-status">Available</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-bolt"></i> <span class="rc-generator">Generator Station</span></h3>
-                <p class="rc-generator-location">Main Street</p>
-                <p class="rc-generator-distance">0.8 km</p>
-                <span class="status partial rc-generator-status">Low Fuel</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-kit-medical"></i> <span class="rc-medical">Medical Center</span></h3>
-                <p class="rc-medical-location">Hospital District</p>
-                <p class="rc-medical-distance">2.1 km</p>
-                <span class="status available rc-medical-status">Available</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-gas-pump"></i> <span class="rc-fuel">Emergency Fuel</span></h3>
-                <p class="rc-fuel-location">24/7 Gas Station</p>
-                <p class="rc-fuel-distance">1.7 km</p>
-                <span class="status unavailable rc-fuel-status">Unavailable</span>
+        <div class="section-buttons">
+            <div class="section-card" id="resources-card">
+                <h2><i class="fa-solid fa-list"></i> Resources</h2>
+                <p>Find a list of available emergency resources in your community.</p>
             </div>
         </div>
     </div>
-    <button class="emergency-button"><i class="fa-solid fa-siren-on"></i> <span class="sos-btn">EMERGENCY
-            SOS</span></button>
-    
-    <!-- Add this modal just before the closing </body> tag -->
-<div id="addMarkerModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close" id="closeAddMarkerModal">&times;</span>
-    <h3>Add Resource</h3>
-    <form id="addMarkerForm">
-      <label>Type:
-        <select id="markerType" required>
-          <option value="Water">💧 Water</option>
-          <option value="AED">❤️ AED</option>
-          <option value="Fruit">🍏 fruit</option>
-          <option value="Dog walking">🐕 Looking dog walkers</option>
-        </select>
-      </label><br><br>
-      <label>Comment:<br>
-        <input type="text" id="markerComment" maxlength="100" placeholder="Optional comment">
-      </label><br><br>
-      <label>Photo URL:<br>
-        <input type="url" id="markerPhoto" placeholder="http://...">
-      </label><br><br>
-      <input type="hidden" id="markerLat">
-      <input type="hidden" id="markerLng">
-      <button type="submit" class="submit-btn">Add Marker</button>
-    </form>
-  </div>
-</div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        // Translation dictionary
-        const translations = {
-            en: {
-                appTitle: 'Community Compass',
-                appDesc: 'Emergency Resource Locator & Community Safety (2025)',
-                mapPlaceholder: 'Interactive Map Placeholder (Mapbox/Google Maps)',
-                userTypes: ['Local Resident', 'Tourist', 'Municipality', 'Emergency Contact'],
-                resources: [
-                    { name: 'Water Supply', location: 'Central Park', distance: '0.5 km', status: 'Available', statusClass: 'available' },
-                    { name: 'Generator Station', location: 'Main Street', distance: '0.8 km', status: 'Low Fuel', statusClass: 'partial' },
-                    { name: 'Medical Center', location: 'Hospital District', distance: '2.1 km', status: 'Available', statusClass: 'available' },
-                    { name: 'Emergency Fuel', location: '24/7 Gas Station', distance: '1.7 km', status: 'Unavailable', statusClass: 'unavailable' }
-                ],
-                adminText: 'Add/Edit Emergency Info',
-                resources: [
+        // Date range for news
+        const startDate = new Date('2025-05-26');
+        const endDate = new Date('2025-08-08');
 
-                ],
-                sos: 'EMERGENCY SOS'
+        // 7 official news items in English
+        const sampleNews = [
+            {
+                title: "Tallinn Water Outage",
+                content: "Water supply maintenance in central Tallinn on 27.05.2025 from 10:00 to 16:00. Please store drinking water in advance.",
+                date: "2025-05-27",
+                source: "Tallinn City Government",
+                official: true
             },
-            es: {
-                appTitle: 'Community Compass',
-                appDesc: 'Localizador de recursos de emergencia y seguridad comunitaria (2025)',
-                mapPlaceholder: 'Mapa interactivo (Mapbox/Google Maps)',
-                userTypes: ['Residente local', 'Turista', 'Municipalidad', 'Contacto de emergencia'],
-                resources: [
-                    { name: 'Punto de agua', location: 'Parque Central', distance: '0.5 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Refugio de emergencia', location: 'Centro Comunitario', distance: '1.2 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Estación de generador', location: 'Calle Principal', distance: '0.8 km', status: 'Combustible bajo', statusClass: 'partial' },
-                    { name: 'Centro médico', location: 'Distrito Hospitalario', distance: '2.1 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Combustible de emergencia', location: 'Gasolinera 24/7', distance: '1.7 km', status: 'No disponible', statusClass: 'unavailable' }
-                ],
-                adminText: 'Añadir/Editar información de emergencia',
-                resources: [
-
-                ],
-                sos: 'EMERGENCIA SOS'
+            {
+                title: "National Crisis Exercise",
+                content: "A national crisis exercise will take place in Estonia on 03.06.2025. Short interruptions in communication and electricity services are possible.",
+                date: "2025-06-03",
+                source: "Estonian Rescue Board",
+                official: true
             },
-            et: {
-                appTitle: 'Community Compass',
-                appDesc: 'Hädaabi ressursside kaart & kogukonna turvalisus (2025)',
-                mapPlaceholder: 'Interaktiivne kaart (Mapbox/Google Maps)',
-                userTypes: ['Kohalik elanik', 'Turist', 'Omavalitsus', 'Hädaabi kontakt'],
-                resources: [
-                    { name: 'Veevõtukoht', location: 'Kesklinna park', distance: '0,5 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Varjupaik', location: 'Kogukonnakeskus', distance: '1,2 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Generaatori jaam', location: 'Peatänav', distance: '0,8 km', status: 'Vähe kütust', statusClass: 'partial' },
-                    { name: 'Meditsiinikeskus', location: 'Haigla piirkond', distance: '2,1 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Hädaabi kütus', location: '24/7 Tankla', distance: '1,7 km', status: 'Pole saadaval', statusClass: 'unavailable' }
-                ],
-                adminText: 'Lisa või muuda hädaabi infot',
-                resources: [
-
-                ],
-                sos: 'HÄDAABI SOS'
+            {
+                title: "New Traffic Arrangements in Mustamäe",
+                content: "From 15.06.2025, traffic arrangements will change in the Mustamäe district. Please follow temporary traffic signs.",
+                date: "2025-06-15",
+                source: "Tallinn City Government",
+                official: true
+            },
+            {
+                title: "Storm Warning for Western Estonia",
+                content: "A strong storm is expected in Western Estonia on 25.06.2025. Please secure loose items and avoid going to the forest.",
+                date: "2025-06-25",
+                source: "Estonian Environment Agency",
+                official: true
+            },
+            {
+                title: "School Summer Holidays",
+                content: "All Tallinn schools will be on summer holiday from 01.07.2025 to 31.08.2025. Have a great vacation!",
+                date: "2025-07-01",
+                source: "Tallinn Education Department",
+                official: true
+            },
+            {
+                title: "New Vaccination Center Opened",
+                content: "A new vaccination center will open in Lasnamäe on 08.07.2025. Registration available via the e-portal.",
+                date: "2025-07-08",
+                source: "Health Board",
+                official: true
+            },
+            {
+                title: "Flood Warning in North Tallinn",
+                content: "Heavy rainfall and possible flooding expected in North Tallinn on 08.08.2025. Please follow official updates.",
+                date: "2025-08-08",
+                source: "Tallinn City Government",
+                official: true
             }
-        };
+        ];
 
-        // Language switcher
-        const langSelect = document.getElementById('lang');
-        function updateLang(lang) {
-            const t = translations[lang];
-            document.getElementById('app-title').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${t.appTitle}`;
-            document.getElementById('app-desc').textContent = t.appDesc;
-            document.getElementById('map-placeholder').textContent = t.mapPlaceholder;
-            // User types
-            document.querySelector('.ut-resident').textContent = t.userTypes[0];
-            document.querySelector('.ut-tourist').textContent = t.userTypes[1];
-            document.querySelector('.ut-municipality').textContent = t.userTypes[2];
-            document.querySelector('.ut-contact').textContent = t.userTypes[3];
-            document.querySelector('.ut-admin').textContent = t.adminText;
-
-            // Resources
-            const res = t.resources;
-            document.querySelector('.rc-water').textContent = res[0].name;
-            document.querySelector('.rc-water-location').textContent = res[0].location;
-            document.querySelector('.rc-water-distance').textContent = res[0].distance;
-            document.querySelector('.rc-water-status').textContent = res[0].status;
-            document.querySelector('.rc-water-status').className = `status rc-water-status ${res[0].statusClass}`;
-
-            document.querySelector('.rc-generator').textContent = res[2].name;
-            document.querySelector('.rc-generator-location').textContent = res[2].location;
-            document.querySelector('.rc-generator-distance').textContent = res[2].distance;
-            document.querySelector('.rc-generator-status').textContent = res[2].status;
-            document.querySelector('.rc-generator-status').className = `status rc-generator-status ${res[2].statusClass}`;
-
-            document.querySelector('.rc-medical').textContent = res[3].name;
-            document.querySelector('.rc-medical-location').textContent = res[3].location;
-            document.querySelector('.rc-medical-distance').textContent = res[3].distance;
-            document.querySelector('.rc-medical-status').textContent = res[3].status;
-            document.querySelector('.rc-medical-status').className = `status rc-medical-status ${res[3].statusClass}`;
-
-            document.querySelector('.rc-fuel').textContent = res[4].name;
-            document.querySelector('.rc-fuel-location').textContent = res[4].location;
-            document.querySelector('.rc-fuel-distance').textContent = res[4].distance;
-            document.querySelector('.rc-fuel-status').textContent = res[4].status;
-            document.querySelector('.rc-fuel-status').className = `status rc-fuel-status ${res[4].statusClass}`;
-
-            document.querySelector('.sos-btn').textContent = t.sos;
-
-            document.querySelector('[data-type="admin"]').addEventListener('click', function () {
-                window.location.href = 'admin.html';
-            });
-        }
-        langSelect.addEventListener('change', e => updateLang(e.target.value));
-        // Initial language
-        updateLang('en');
-
-        // User type selection
-        document.querySelectorAll('.user-type-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-        // Emergency button
-        document.querySelector('.emergency-button').addEventListener('click', () => {
-            alert('Emergency services have been notified of your location!');
-        });
-        // Simulate status update
-        setInterval(() => {
-            const statuses = document.querySelectorAll('.status');
-            statuses.forEach(status => {
-                if (Math.random() > 0.92) {
-                    if (status.classList.contains('available')) {
-                        status.classList.remove('available');
-                        status.classList.add('partial');
-                        status.textContent = langSelect.value === 'es' ? 'Combustible bajo' : langSelect.value === 'et' ? 'Vähe kütust' : 'Low Fuel';
-                    } else if (status.classList.contains('partial')) {
-                        status.classList.remove('partial');
-                        status.classList.add('unavailable');
-                        status.textContent = langSelect.value === 'es' ? 'No disponible' : langSelect.value === 'et' ? 'Pole saadaval' : 'Unavailable';
-                    } else if (status.classList.contains('unavailable')) {
-                        status.classList.remove('unavailable');
-                        status.classList.add('available');
-                        status.textContent = langSelect.value === 'es' ? 'Disponible' : langSelect.value === 'et' ? 'Saadaval' : 'Available';
-                    }
-                }
-            });
-        }, 6000);
-        // Auth functionality
-        let isLoggedIn = false;
-        const loginBtn = document.getElementById('loginBtn');
-        const adminPanel = document.getElementById('adminPanel');
-        const loginModal = document.getElementById('loginModal');
-        const resourceModal = document.getElementById('resourceModal');
-        const addResourceBtn = document.getElementById('addResourceBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        // Show/hide modals
-        loginBtn.onclick = () => loginModal.style.display = "block";
-        addResourceBtn.onclick = () => resourceModal.style.display = "block";
-
-        // Close modals when clicking (x) or outside
-        document.querySelectorAll('.close').forEach(closeBtn => {
-            closeBtn.onclick = function () {
-                loginModal.style.display = "none";
-                resourceModal.style.display = "none";
+        // Sample cooperative news and community posts (merged)
+        const sampleCommunityBoard = [
+            {
+                title: "New Parking Regulations",
+                content: "Please be aware of the new parking regulations starting July 1st.",
+                date: "2025-06-20",
+                type: "announcement"
+            },
+            {
+                title: "Upcoming Building Maintenance",
+                content: "Building maintenance scheduled for June 28th. Expect some noise.",
+                date: "2025-06-25",
+                type: "announcement"
+            },
+            {
+                title: "Selling: Gently Used Bicycle",
+                content: "Selling a gently used bicycle for 50 EUR. Contact John at Apt 2B.",
+                date: "2025-06-18",
+                type: "sale"
+            },
+            {
+                title: "Offering: Free Piano Lessons",
+                content: "Offering free piano lessons to beginners. Contact Jane at Apt 3A.",
+                date: "2025-06-22",
+                type: "offer"
+            },
+            {
+                title: "Extra tomatoes from my garden",
+                content: "I have a basket of fresh tomatoes to give away. Pick up in the evening.",
+                date: "2025-06-10",
+                type: "give",
+                author: "Anna"
+            },
+            {
+                title: "Need help fixing my bike",
+                content: "My bike chain broke. Anyone with tools or experience to help?",
+                date: "2025-06-12",
+                type: "need",
+                author: "Markus"
             }
-        });
+        ];
 
-        window.onclick = function (event) {
-            if (event.target == loginModal || event.target == resourceModal) {
-                loginModal.style.display = "none";
-                resourceModal.style.display = "none";
-            }
+        // Function to check if a date is within the specified range
+        function isDateInRange(dateString, startDate, endDate) {
+            const date = new Date(dateString);
+            return date >= startDate && date <= endDate;
         }
 
-        // Tab switching in login modal
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.onclick = function () {
-                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                if (this.dataset.tab === 'login') {
-                    document.getElementById('loginForm').style.display = 'flex';
-                    document.getElementById('registerForm').style.display = 'none';
-                } else {
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('registerForm').style.display = 'flex';
-                }
-            }
-        });
+        // Function to load news
+        function loadNews() {
+            const newsFeed = document.getElementById('news-feed');
+            newsFeed.innerHTML = '';
 
-        // Handle login
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            // Sort by date (newest first)
+            const sortedNews = sampleNews
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // Here you would normally validate against a backend
-            if (email && password) {
-                isLoggedIn = true;
-                loginBtn.style.display = 'none';
-                adminPanel.style.display = 'flex';
-                loginModal.style.display = 'none';
-                alert('Logged in successfully!');
-            }
+            sortedNews.forEach(item => {
+                const newsItem = document.createElement('div');
+                newsItem.className = `news-item ${item.official ? 'official' : ''}`;
+                newsItem.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <p>${item.content}</p>
+                    <div class="date">${item.date} • ${item.source}</div>
+                `;
+
+                newsItem.addEventListener('click', function () {
+                    this.classList.toggle('expanded');
+                });
+
+                newsFeed.appendChild(newsItem);
+            });
         }
 
-        // Handle register
-        function handleRegister() {
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regPasswordConfirm').value;
+        // Function to load community board (merged cooperative news and posts)
+        function loadCommunityBoard() {
+            const boardList = document.getElementById('community-board-list');
+            boardList.innerHTML = '';
 
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
+            // Filter by date and sort by date descending
+            const filtered = sampleCommunityBoard
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filtered.length === 0) {
+                boardList.innerHTML = '<li>No posts or announcements available.</li>';
                 return;
             }
 
@@ -994,18 +539,8 @@ function addMarker(data, save) {
     // Check if this is a community marker
     const isCommunity = ["fruit", "car", "pet", "other"].includes(data.type);
 
-    // Add timestamp if not present
-    if (!data.timestamp) {
-        data.timestamp = new Date().toLocaleString();
-    }
-
     const chatBtn = isCommunity
         ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
-        : "";
-
-    // Only show thumbs up for public resources
-    const likeBtn = !isCommunity
-        ? `<button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>`
         : "";
 
     const html = `
@@ -1014,8 +549,7 @@ function addMarker(data, save) {
         ${needGive}
         ${data.comment || "<i>No comment</i>"}<br>
         ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
-        <div style="font-size:0.95em;color:#888;margin:4px 0;">🕒 ${data.timestamp}</div>
-        ${likeBtn}
+        <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
         ${chatBtn}
         </div>`;
 
@@ -1195,4 +729,5 @@ function showCommentForm(latlng, accessType, type) {
 }
     </script>
 </body>
+
 </html>
