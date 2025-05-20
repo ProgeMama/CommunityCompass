@@ -994,18 +994,8 @@ function addMarker(data, save) {
     // Check if this is a community marker
     const isCommunity = ["fruit", "car", "pet", "other"].includes(data.type);
 
-    // Add timestamp if not present
-    if (!data.timestamp) {
-        data.timestamp = new Date().toLocaleString();
-    }
-
     const chatBtn = isCommunity
         ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
-        : "";
-
-    // Only show thumbs up for public resources
-    const likeBtn = !isCommunity
-        ? `<button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>`
         : "";
 
     const html = `
@@ -1014,8 +1004,7 @@ function addMarker(data, save) {
         ${needGive}
         ${data.comment || "<i>No comment</i>"}<br>
         ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
-        <div style="font-size:0.95em;color:#888;margin:4px 0;">🕒 ${data.timestamp}</div>
-        ${likeBtn}
+        <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
         ${chatBtn}
         </div>`;
 
