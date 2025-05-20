@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Compass - Landing Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff3b30;
+            --secondary: #222831;
+            --accent: #00adb5;
+            --bg: antiquewhite;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-dark: rgba(34, 40, 49, 0.7);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            --radius: 22px;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            min-height: 100vh;
+            color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .header {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #fff;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .info-section {
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .info-section h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .news-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .news-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .news-item.official {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .news-item.expanded {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .news-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        .news-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #555;
+            display: none;
+        }
+
+        .news-item.expanded p {
+            display: block;
+        }
+
+        .news-item .date {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .community-board {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .community-board h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .community-board ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .community-board li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1em;
+        }
+
+        .community-board li:last-child {
+            border-bottom: none;
+        }
+
+        .community-board .reply-button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 1em;
+            padding: 0.3em 0.8em;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .community-board .my-announcements-button {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 1em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .section-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .section-card {
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            backdrop-filter: blur(8px);
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-card h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-card p {
+            color: var(--secondary);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .section-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
+    </div>
+
+    <div class="container">
+        <div class="info-section">
+            <h2><i class="fa-solid fa-info-circle"></i> Public Announcements</h2>
+            <div class="news-feed" id="news-feed">
+                <div class="news-item">
+                    <h3>Loading news...</h3>
+                    <p>Please wait while we fetch the latest updates.</p>
+                </div>
+            </div>
+
+            <div class="community-board">
+                <h3>Community Board</h3>
+                <ul id="community-board-list">
+                    <li>No posts or announcements available.</li>
+                </ul>
+                <a href="#" class="my-announcements-button">My Announcements</a>
+            </div>
+        </div>
+
+        <div class="section-buttons">
+            <div class="section-card" id="resources-card">
+                <h2><i class="fa-solid fa-list"></i> Resources</h2>
+                <p>Find a list of available emergency resources in your community.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Date range for news
+        const startDate = new Date('2025-05-26');
+        const endDate = new Date('2025-08-08');
+
+        // 7 official news items in English
+        const sampleNews = [
+            {
+                title: "Tallinn Water Outage",
+                content: "Water supply maintenance in central Tallinn on 27.05.2025 from 10:00 to 16:00. Please store drinking water in advance.",
+                date: "2025-05-27",
+                source: "Tallinn City Government",
+                official: true
+            },
+            {
+                title: "National Crisis Exercise",
+                content: "A national crisis exercise will take place in Estonia on 03.06.2025. Short interruptions in communication and electricity services are possible.",
+                date: "2025-06-03",
+                source: "Estonian Rescue Board",
+                official: true
+            },
+            {
+                title: "New Traffic Arrangements in Mustamäe",
+                content: "From 15.06.2025, traffic arrangements will change in the Mustamäe district. Please follow temporary traffic signs.",
+                date: "2025-06-15",
+                source: "Tallinn City Government",
+                official: true
+            },
+            {
+                title: "Storm Warning for Western Estonia",
+                content: "A strong storm is expected in Western Estonia on 25.06.2025. Please secure loose items and avoid going to the forest.",
+                date: "2025-06-25",
+                source: "Estonian Environment Agency",
+                official: true
+            },
+            {
+                title: "School Summer Holidays",
+                content: "All Tallinn schools will be on summer holiday from 01.07.2025 to 31.08.2025. Have a great vacation!",
+                date: "2025-07-01",
+                source: "Tallinn Education Department",
+                official: true
+            },
+            {
+                title: "New Vaccination Center Opened",
+                content: "A new vaccination center will open in Lasnamäe on 08.07.2025. Registration available via the e-portal.",
+                date: "2025-07-08",
+                source: "Health Board",
+                official: true
+            },
+            {
+                title: "Flood Warning in North Tallinn",
+                content: "Heavy rainfall and possible flooding expected in North Tallinn on 08.08.2025. Please follow official updates.",
+                date: "2025-08-08",
+                source: "Tallinn City Government",
+                official: true
+            }
+        ];
+
+        // Sample cooperative news and community posts (merged)
+        const sampleCommunityBoard = [
+            {
+                title: "New Parking Regulations",
+                content: "Please be aware of the new parking regulations starting July 1st.",
+                date: "2025-06-20",
+                type: "announcement"
+            },
+            {
+                title: "Upcoming Building Maintenance",
+                content: "Building maintenance scheduled for June 28th. Expect some noise.",
+                date: "2025-06-25",
+                type: "announcement"
+            },
+            {
+                title: "Selling: Gently Used Bicycle",
+                content: "Selling a gently used bicycle for 50 EUR. Contact John at Apt 2B.",
+                date: "2025-06-18",
+                type: "sale"
+            },
+            {
+                title: "Offering: Free Piano Lessons",
+                content: "Offering free piano lessons to beginners. Contact Jane at Apt 3A.",
+                date: "2025-06-22",
+                type: "offer"
+            },
+            {
+                title: "Extra tomatoes from my garden",
+                content: "I have a basket of fresh tomatoes to give away. Pick up in the evening.",
+                date: "2025-06-10",
+                type: "give",
+                author: "Anna"
+            },
+            {
+                title: "Need help fixing my bike",
+                content: "My bike chain broke. Anyone with tools or experience to help?",
+                date: "2025-06-12",
+                type: "need",
+                author: "Markus"
+            }
+        ];
+
+        // Function to check if a date is within the specified range
+        function isDateInRange(dateString, startDate, endDate) {
+            const date = new Date(dateString);
+            return date >= startDate && date <= endDate;
+        }
+
+        // Function to load news
+        function loadNews() {
+            const newsFeed = document.getElementById('news-feed');
+            newsFeed.innerHTML = '';
+
+            // Sort by date (newest first)
+            const sortedNews = sampleNews
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            sortedNews.forEach(item => {
+                const newsItem = document.createElement('div');
+                newsItem.className = `news-item ${item.official ? 'official' : ''}`;
+                newsItem.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <p>${item.content}</p>
+                    <div class="date">${item.date} • ${item.source}</div>
+                `;
+
+                newsItem.addEventListener('click', function () {
+                    this.classList.toggle('expanded');
+                });
+
+                newsFeed.appendChild(newsItem);
+            });
+        }
+
+        // Function to load community board (merged cooperative news and posts)
+        function loadCommunityBoard() {
+            const boardList = document.getElementById('community-board-list');
+            boardList.innerHTML = '';
+
+            // Filter by date and sort by date descending
+            const filtered = sampleCommunityBoard
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filtered.length === 0) {
+                boardList.innerHTML = '<li>No posts or announcements available.</li>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const listItem = document.createElement('li');
+                let meta = item.date;
+                if (item.author) meta += ' • ' + item.author;
+
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${item.title}</strong><br>
+                        <span style="font-size:0.95em;color:#555;">${item.content}</span><br>
+                        <span class="date" style="font-size:0.85em;color:#888;">${meta}</span>
+                    </div>
+                    ${item.type !== 'announcement' ? '<button class="reply-button">Reply</button>' : ''}
+                `;
+
+                boardList.appendChild(listItem);
+            });
+        }
+
+        // Load initial news and community board
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNews();
+            loadCommunityBoard();
+        });
+
+        // Navigation
+        document.getElementById('resources-card').onclick = () => {
+            window.location.href = 'full-view.html';
+        };
+
+        // My Announcements button
+        document.querySelector('.community-board .my-announcements-button').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "My Announcements" page (not implemented yet)');
+            // In a real implementation, you would navigate to a page where the user can manage their announcements
+        });
+    </script>
+</body>
+
+</html>
