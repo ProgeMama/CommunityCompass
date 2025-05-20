@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crisis Compass 2025</title>
+    <title>Community Compass 2025</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -442,6 +442,84 @@
                 }
             }
         }
+
+        /* Add this to your <style> section if you want popup buttons to be a bit smaller */
+.popup .user-type-btn {
+    font-size: 1em;
+    padding: 0.5em 1.2em;
+    margin: 0.3em 0;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+/* Nicer filter checkboxes under the map */
+#marker-filters {
+    margin: 1.5em 0;
+    text-align: center;
+    background: var(--glass);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.2em 2em;
+    display: inline-block;
+}
+
+#marker-filters strong {
+    font-size: 1.1em;
+    color: var(--primary);
+    margin-right: 1em;
+}
+
+#marker-filters label {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0,0,0,0.03);
+    border-radius: 1.2em;
+    padding: 0.4em 1em 0.4em 0.7em;
+    margin: 0.2em 0.5em 0.2em 0;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border: 1.5px solid transparent;
+}
+
+#marker-filters label:hover, #marker-filters input:focus + label {
+    background: var(--accent);
+    color: #fff;
+}
+
+#marker-filters input[type="checkbox"] {
+    accent-color: var(--primary);
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.5em;
+    border-radius: 0.3em;
+    border: 1.5px solid #bbb;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+#marker-filters input[type="checkbox"]:checked + label {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+#marker-filters > div {
+    margin-bottom: 0.5em;
+}
+
+@media (max-width: 600px) {
+    #marker-filters {
+        padding: 1em 0.5em;
+        font-size: 0.98em;
+    }
+    #marker-filters label {
+        font-size: 0.98em;
+        padding: 0.3em 0.7em 0.3em 0.5em;
+    }
+}
     </style>
 </head>
 
@@ -457,7 +535,7 @@
                 <option value="et">Eesti</option>
             </select>
         </div>
-        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> Crisis Compass</h1>
+        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
         <p id="app-desc">Emergency Resource Locator & Community Safety (2025)</p>
     </div>
     <div class="container">
@@ -479,18 +557,32 @@
             <div id="map"></div>
             <span id="map-placeholder" style="display:none;">Interactive Map Placeholder (Mapbox/Google Maps)</span>
         </div>
+
+        <div id="marker-filters" style="margin: 1em 0; text-align:center;">
+        <div style="display:inline-block; margin-right:2em;">
+            <strong>Public resources:</strong>
+            <label><input type="checkbox" class="filter-checkbox" value="water" checked> 💧 Water</label>
+            <label><input type="checkbox" class="filter-checkbox" value="aed" checked> ❤️ AED</label>
+            <label><input type="checkbox" class="filter-checkbox" value="atm" checked> 🏧 ATM</label>
+            <label><input type="checkbox" class="filter-checkbox" value="medical" checked> 🏥 Medical</label>
+            <label><input type="checkbox" class="filter-checkbox" value="fuel" checked> ⛽ Fuel</label>
+        </div>
+        <div style="display:inline-block;">
+            <strong>Community resources:</strong>
+            <label><input type="checkbox" class="filter-checkbox" value="Food" checked> 🍏 Food</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Car" checked> 🚗 Car share</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Pet" checked> 🐕 Dog walking</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Other" checked>🛟 Other</label>
+        </div>
+        </div>
+
         <div class="resource-grid">
+            <h3 style="grid-column:1/-1;">Emergency Resources</h3>
             <div class="resource-card">
                 <h3><i class="fa-solid fa-faucet"></i> <span class="rc-water">Water Supply</span></h3>
                 <p class="rc-water-location">Central Park</p>
                 <p class="rc-water-distance">0.5 km</p>
                 <span class="status available rc-water-status">Available</span>
-            </div>
-            <div class="resource-card">
-                <h3><i class="fa-solid fa-house-chimney"></i> <span class="rc-shelter">Emergency Shelter</span></h3>
-                <p class="rc-shelter-location">Community Center</p>
-                <p class="rc-shelter-distance">1.2 km</p>
-                <span class="status available rc-shelter-status">Available</span>
             </div>
             <div class="resource-card">
                 <h3><i class="fa-solid fa-bolt"></i> <span class="rc-generator">Generator Station</span></h3>
@@ -515,19 +607,45 @@
     <button class="emergency-button"><i class="fa-solid fa-siren-on"></i> <span class="sos-btn">EMERGENCY
             SOS</span></button>
     
+    <!-- Add this modal just before the closing </body> tag -->
+<div id="addMarkerModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="closeAddMarkerModal">&times;</span>
+    <h3>Add Resource</h3>
+    <form id="addMarkerForm">
+      <label>Type:
+        <select id="markerType" required>
+          <option value="Water">💧 Water</option>
+          <option value="AED">❤️ AED</option>
+          <option value="Fruit">🍏 fruit</option>
+          <option value="Dog walking">🐕 Looking dog walkers</option>
+        </select>
+      </label><br><br>
+      <label>Comment:<br>
+        <input type="text" id="markerComment" maxlength="100" placeholder="Optional comment">
+      </label><br><br>
+      <label>Photo URL:<br>
+        <input type="url" id="markerPhoto" placeholder="http://...">
+      </label><br><br>
+      <input type="hidden" id="markerLat">
+      <input type="hidden" id="markerLng">
+      <button type="submit" class="submit-btn">Add Marker</button>
+    </form>
+  </div>
+</div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
         // Translation dictionary
         const translations = {
             en: {
-                appTitle: 'Crisis Compass',
+                appTitle: 'Community Compass',
                 appDesc: 'Emergency Resource Locator & Community Safety (2025)',
                 mapPlaceholder: 'Interactive Map Placeholder (Mapbox/Google Maps)',
                 userTypes: ['Local Resident', 'Tourist', 'Municipality', 'Emergency Contact'],
                 resources: [
                     { name: 'Water Supply', location: 'Central Park', distance: '0.5 km', status: 'Available', statusClass: 'available' },
-                    { name: 'Emergency Shelter', location: 'Community Center', distance: '1.2 km', status: 'Available', statusClass: 'available' },
                     { name: 'Generator Station', location: 'Main Street', distance: '0.8 km', status: 'Low Fuel', statusClass: 'partial' },
                     { name: 'Medical Center', location: 'Hospital District', distance: '2.1 km', status: 'Available', statusClass: 'available' },
                     { name: 'Emergency Fuel', location: '24/7 Gas Station', distance: '1.7 km', status: 'Unavailable', statusClass: 'unavailable' }
@@ -539,7 +657,7 @@
                 sos: 'EMERGENCY SOS'
             },
             es: {
-                appTitle: 'Crisis Compass',
+                appTitle: 'Community Compass',
                 appDesc: 'Localizador de recursos de emergencia y seguridad comunitaria (2025)',
                 mapPlaceholder: 'Mapa interactivo (Mapbox/Google Maps)',
                 userTypes: ['Residente local', 'Turista', 'Municipalidad', 'Contacto de emergencia'],
@@ -557,7 +675,7 @@
                 sos: 'EMERGENCIA SOS'
             },
             et: {
-                appTitle: 'Crisis Compass',
+                appTitle: 'Community Compass',
                 appDesc: 'Hädaabi ressursside kaart & kogukonna turvalisus (2025)',
                 mapPlaceholder: 'Interaktiivne kaart (Mapbox/Google Maps)',
                 userTypes: ['Kohalik elanik', 'Turist', 'Omavalitsus', 'Hädaabi kontakt'],
@@ -597,12 +715,6 @@
             document.querySelector('.rc-water-distance').textContent = res[0].distance;
             document.querySelector('.rc-water-status').textContent = res[0].status;
             document.querySelector('.rc-water-status').className = `status rc-water-status ${res[0].statusClass}`;
-
-            document.querySelector('.rc-shelter').textContent = res[1].name;
-            document.querySelector('.rc-shelter-location').textContent = res[1].location;
-            document.querySelector('.rc-shelter-distance').textContent = res[1].distance;
-            document.querySelector('.rc-shelter-status').textContent = res[1].status;
-            document.querySelector('.rc-shelter-status').className = `status rc-shelter-status ${res[1].statusClass}`;
 
             document.querySelector('.rc-generator').textContent = res[2].name;
             document.querySelector('.rc-generator-location').textContent = res[2].location;
@@ -796,63 +908,280 @@
             });
 
         // On map click: prompt for water/AED
-        map.on('click', e => {
-            const lat = e.latlng.lat;
-            const lng = e.latlng.lng;
-            const type = prompt("Add location type: 'water' or 'aed'");
-            if (!["water", "aed"].includes(type)) return;
-
-            const comment = prompt("Optional comment:");
-            const marker = { lat, lng, type, comment, thumbs: 0 };
-            addMarker(marker, true);
-        });
-
-        // Add marker to map and optionally save it
-        function addMarker(data, save) {
-            const icon = L.divIcon({
-                className: "custom-icon",
-                html: data.type === "water" ? "💧" : "❤️",
-                iconSize: [148, 148],
-                iconAnchor: [12, 12],
-            });
-
-            const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
-            const id = `${data.lat},${data.lng}`;
-
-            const html = `
-                <div class="popup">
-                <strong>💧 Water Source</strong><br>
-                ${data.comment || "<i>No comment</i>"}<br>
-                ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
-                👍 <span id="thumbs-${id}">${data.thumbs}</span> 
-                <button onclick="thumb('${id}')">Thumbs up</button>
-                </div>`;
-            marker.bindPopup(html);
-
-            if (save) {
-                stored.push(data);
-                localStorage.setItem("markers", JSON.stringify(stored));
-            }
+        map.on('click', function(e) {
+        // Remove any existing temp marker
+        if (window.tempMarker) {
+            map.removeLayer(window.tempMarker);
         }
 
-        // Thumbs up handler
-        function thumb(id) {
-            const el = document.getElementById(`thumbs-${id}`);
-            const newVal = +el.textContent + 1;
-            el.textContent = newVal;
+        // Place a temporary marker
+        window.tempMarker = L.marker(e.latlng).addTo(map);
 
-            // Update localStorage
-            const index = stored.findIndex(m => `${m.lat},${m.lng}` === id);
-            if (index !== -1) {
-                stored[index].thumbs = newVal;
-                localStorage.setItem("markers", JSON.stringify(stored));
+        // Popup HTML for public/private selection
+        const popupHtml = `
+            <div>
+                <strong>Add Resource</strong><br>
+                <button id="publicBtn">Public</button>
+                <button id="privateBtn">Private</button>
+            </div>
+        `;
+
+        window.tempMarker.bindPopup(popupHtml).openPopup();
+
+        // Wait for popup to open, then attach event listeners
+        setTimeout(() => {
+            const publicBtn = document.getElementById('publicBtn');
+            const privateBtn = document.getElementById('privateBtn');
+            if (publicBtn) {
+                publicBtn.onclick = (e) => {
+                    L.DomEvent.stopPropagation(e);
+                    e.stopPropagation();
+                    showTypeSelection(window.tempMarker.getLatLng(), 'Public');
+                };
             }
-        }
+            if (privateBtn) {
+                privateBtn.onclick = (e) => {
+                    L.DomEvent.stopPropagation(e);
+                    e.stopPropagation();
+                    showTypeSelection(window.tempMarker.getLatLng(), 'Community');
+                };
+            }
+        }, 100);
+    });
 
-        // Expose thumb globally for button use
-        window.thumb = thumb;
+        const allMarkers = []; // Store all markers with their type
 
+function addMarker(data, save) {
+    const icon = L.divIcon({
+        className: "custom-icon",
+        html: `<span style="font-size:18px;line-height:1;">${
+            data.type === "water" ? "💧"
+            : data.type === "aed" ? "❤️"
+            : data.type === "atm" ? "🏧"
+            : data.type === "medical" ? "🏥"
+            : data.type === "fuel" ? "⛽"
+            : data.type === "fruit" ? "🍏"
+            : data.type === "car" ? "🚗"
+            : data.type === "pet" ? "🐕"
+            : data.type === "other" ? "🛟"
+            : "❓"
+        }</span>`,
+        iconSize: [48, 48],
+        iconAnchor: [24, 24],
+    });
+
+    const label = data.type === "water" ? "💧 Water Source"
+        : data.type === "aed" ? "❤️ AED"
+        : data.type === "atm" ? "🏧 ATM"
+        : data.type === "medical" ? "🏥 Medical"
+        : data.type === "fuel" ? "⛽ Fuel"
+        : data.type === "fruit" ? "🍏 Food"
+        : data.type === "car" ? "🚗 Car"
+        : data.type === "pet" ? "🐕 Dog walking"
+        : data.type === "other" ? "🛟 Other"
+        : "❓";
+
+    // Show "Need" and "Give" if present
+    let needGive = "";
+    if (data.need || data.give) {
+        needGive += `<div>`;
+        if (data.need) needGive += `<span style="color:#ff3b30;">🟧 Need</span><br>`;
+        if (data.give) needGive += `<span style="color:#00adb5;">🟩 Give</span><br>`;
+        needGive += `</div>`;
+    }
+
+    const id = `${data.lat},${data.lng}`;
+    // Check if this is a community marker
+    const isCommunity = ["fruit", "car", "pet", "other"].includes(data.type);
+
+    const chatBtn = isCommunity
+        ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
+        : "";
+
+    const html = `
+        <div class="popup">
+        <strong>${label}</strong><br>
+        ${needGive}
+        ${data.comment || "<i>No comment</i>"}<br>
+        ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
+        <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
+        ${chatBtn}
+        </div>`;
+
+    const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
+    marker.bindPopup(html);
+
+    // Store marker and its type for filtering
+    allMarkers.push({ marker, type: data.type.toLowerCase() });
+
+    if (save) {
+        stored.push(data);
+        localStorage.setItem("markers", JSON.stringify(stored));
+    }
+}
+
+function thumb(id) {
+    // Find the marker data by id
+    const markerObj = allMarkers.find(obj => `${obj.marker.getLatLng().lat},${obj.marker.getLatLng().lng}` === id);
+    if (markerObj) {
+        // Update thumbs count in data
+        if (!markerObj.marker._thumbs) markerObj.marker._thumbs = 0;
+        markerObj.marker._thumbs++;
+        // Update popup display
+        const el = document.getElementById('thumbs-' + id);
+        if (el) el.textContent = markerObj.marker._thumbs;
+        // Optionally update localStorage if you want persistence
+    }
+}
+
+// Add this function globally (for now it just alerts, you can replace with your chat logic)
+function startChat(id) {
+    alert("Chat feature coming soon for marker: " + id);
+}
     </script>
 
+    <script>
+
+    // Close modal
+    document.getElementById('closeAddMarkerModal').onclick = function() {
+        document.getElementById('addMarkerModal').style.display = 'none';
+    };
+
+    // Handle form submit
+    document.getElementById('addMarkerForm').onsubmit = function(ev) {
+        ev.preventDefault();
+        const lat = parseFloat(document.getElementById('markerLat').value);
+        const lng = parseFloat(document.getElementById('markerLng').value);
+        const type = document.getElementById('markerType').value;
+        const comment = document.getElementById('markerComment').value;
+        const foto = document.getElementById('markerPhoto').value;
+        const marker = { lat, lng, type, comment, thumbs: 0, foto };
+        addMarker(marker, true);
+        document.getElementById('addMarkerModal').style.display = 'none';
+        document.getElementById('addMarkerForm').reset();
+    };
+
+    // Optional: close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('addMarkerModal')) {
+            document.getElementById('addMarkerModal').style.display = "none";
+        }
+    };
+</script>
+
+    <script>
+        // Filtering logic
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const enabledTypes = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => cb.value);
+                allMarkers.forEach(obj => {
+                    if (enabledTypes.includes(obj.type)) {
+                        map.addLayer(obj.marker);
+                    } else {
+                        map.removeLayer(obj.marker);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        function showTypeSelection(latlng, accessType) {
+    // Define icons for each access type
+    const publicIcons = [
+        { type: 'water', icon: '💧' },
+        { type: 'aed', icon: '❤️' },
+        { type: 'atm', icon: '🏧' },
+        { type: 'medical', icon: '🏥' },
+        { type: 'fuel', icon: '⛽' }
+    ];
+    const communityIcons = [
+        { type: 'fruit', icon: '🍏' },
+        { type: 'car', icon: '🚗' },
+        { type: 'pet', icon: '🐕' },
+        { type: 'other', icon: '🛟' }
+    ];
+
+    // Pick which icons to show
+    const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
+
+    let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
+    icons.forEach(i => {
+        html += `<button class="icon-btn" data-type="${i.type}">${i.icon}</button> `;
+    });
+    html += `</div>`;
+
+    window.tempMarker.setPopupContent(html).openPopup();
+
+    setTimeout(() => {
+        // Prevent map click from firing when clicking inside the popup
+        const popupContent = document.getElementById('popup-content');
+        if (popupContent) {
+            popupContent.addEventListener('mousedown', function(e) {
+                L.DomEvent.stopPropagation(e);
+            });
+            popupContent.addEventListener('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+            });
+        }
+        document.querySelectorAll('.icon-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                showCommentForm(latlng, accessType, btn.dataset.type);
+            };
+        });
+    }, 100);
+}
+
+function showCommentForm(latlng, accessType, type) {
+    // Only show checkboxes for community/private
+    const isCommunity = accessType.toLowerCase() === 'community';
+    const checkboxes = isCommunity ? `
+        <label><input type="checkbox" id="needBox"> Need</label>
+        <label><input type="checkbox" id="giveBox"> Give</label><br>
+    ` : '';
+
+    const html = `
+        <div>
+            <strong>Add Details</strong><br>
+            ${checkboxes}
+            <input type="text" id="markerComment" placeholder="Optional comment"><br>
+            <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
+            <button id="addMarkerBtn">Add Marker</button>
+        </div>
+    `;
+    window.tempMarker.setPopupContent(html).openPopup();
+
+    setTimeout(() => {
+        document.getElementById('addMarkerBtn').onclick = () => {
+            const comment = document.getElementById('markerComment').value;
+            const foto = document.getElementById('markerPhoto').value;
+            // Get checkbox values if community
+            let need = false, give = false;
+            if (isCommunity) {
+                need = document.getElementById('needBox').checked;
+                give = document.getElementById('giveBox').checked;
+            }
+            // Remove the temp marker first
+            if (window.tempMarker) {
+                map.removeLayer(window.tempMarker);
+                window.tempMarker = null;
+            }
+            // Add the permanent marker with the selected icon and options
+            const marker = {
+                lat: latlng.lat,
+                lng: latlng.lng,
+                type: type.toLowerCase(),
+                comment,
+                thumbs: 0,
+                foto,
+                access: accessType,
+                need,
+                give
+            };
+            addMarker(marker, true);
+        };
+    }, 100);
+}
+    </script>
 </body>
 </html>
