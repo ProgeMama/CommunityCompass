@@ -5,9 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-seguridad 2025</title>
+    <title>Crisis Compass 2025</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         :root {
             --primary: #ff3b30;
@@ -173,11 +174,15 @@
             border-radius: var(--radius);
             margin: 1.5rem 0 2rem 0;
             box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius);
+            z-index: 1;
         }
 
         .map-mockup {
@@ -452,7 +457,7 @@
                 <option value="et">Eesti</option>
             </select>
         </div>
-        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> E-seguridad</h1>
+        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> Crisis Compass</h1>
         <p id="app-desc">Emergency Resource Locator & Community Safety (2025)</p>
     </div>
     <div class="container">
@@ -471,10 +476,8 @@
             </a>
         </div>
         <div class="map-container">
-            <div class="map-mockup">
-                <i class="fa-solid fa-map-location-dot" style="font-size:2.5em; color:#00adb5;"></i><br>
-                <span id="map-placeholder">Interactive Map Placeholder (Mapbox/Google Maps)</span>
-            </div>
+            <div id="map"></div>
+            <span id="map-placeholder" style="display:none;">Interactive Map Placeholder (Mapbox/Google Maps)</span>
         </div>
         <div class="resource-grid">
             <div class="resource-card">
@@ -511,11 +514,14 @@
     </div>
     <button class="emergency-button"><i class="fa-solid fa-siren-on"></i> <span class="sos-btn">EMERGENCY
             SOS</span></button>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <script>
         // Translation dictionary
         const translations = {
             en: {
-                appTitle: 'E-seguridad',
+                appTitle: 'Crisis Compass',
                 appDesc: 'Emergency Resource Locator & Community Safety (2025)',
                 mapPlaceholder: 'Interactive Map Placeholder (Mapbox/Google Maps)',
                 userTypes: ['Local Resident', 'Tourist', 'Municipality', 'Emergency Contact'],
@@ -533,7 +539,7 @@
                 sos: 'EMERGENCY SOS'
             },
             es: {
-                appTitle: 'E-seguridad',
+                appTitle: 'Crisis Compass',
                 appDesc: 'Localizador de recursos de emergencia y seguridad comunitaria (2025)',
                 mapPlaceholder: 'Mapa interactivo (Mapbox/Google Maps)',
                 userTypes: ['Residente local', 'Turista', 'Municipalidad', 'Contacto de emergencia'],
@@ -551,7 +557,7 @@
                 sos: 'EMERGENCIA SOS'
             },
             et: {
-                appTitle: 'E-seguridad',
+                appTitle: 'Crisis Compass',
                 appDesc: 'Hädaabi ressursside kaart & kogukonna turvalisus (2025)',
                 mapPlaceholder: 'Interaktiivne kaart (Mapbox/Google Maps)',
                 userTypes: ['Kohalik elanik', 'Turist', 'Omavalitsus', 'Hädaabi kontakt'],
@@ -758,7 +764,97 @@
                 alert('Please fill in all required fields!');
             }
         }
+        
     </script>
-</body>
+    <script>
+        // Initialize the Leaflet map
+        const map = L.map('map').setView([59.437, 24.75], 13); // Example: Tallinn
 
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Preset water locations
+        const presetWaterLocations = [
+            { lat: 59.437, lng: 24.7536, type: 'water', comment: 'Central Park Water Tap', thumbs: 0 },
+            { lat: 59.433, lng: 24.745, type: 'water', comment: 'Old Town Fountain', thumbs: 0 },
+            { lat: 59.44, lng: 24.76, type: 'water', comment: 'Community Center Dispenser', thumbs: 0 }
+        ];
+
+        // Marker storage (load from localStorage or start with presets)
+        let stored = JSON.parse(localStorage.getItem("markers") || "[]");
+        // Add preset water locations only if not already present
+        if (stored.length === 0) {
+            presetWaterLocations.forEach(m => stored.push(m));
+            localStorage.setItem("markers", JSON.stringify(stored));
+        }
+        // Add all markers to map
+        stored.forEach(m => addMarker(m, false));
+
+        // Optional: Add a marker for demo (can be removed if not needed)
+        // L.marker([59.437, 24.75])
+        //     .addTo(map)
+        //     .bindPopup('Emergency Resource Center')
+        //     .openPopup();
+
+        // On map click: prompt for water/AED
+        map.on('click', e => {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            const type = prompt("Add location type: 'water' or 'aed'");
+            if (!["water", "aed"].includes(type)) return;
+
+            const comment = prompt("Optional comment:");
+            const marker = { lat, lng, type, comment, thumbs: 0 };
+            addMarker(marker, true);
+        });
+
+        // Add marker to map and optionally save it
+        function addMarker(data, save) {
+            const icon = L.divIcon({
+                className: "custom-icon",
+                html: data.type === "water" ? "💧" : "❤️",
+                iconSize: [48, 48],
+                iconAnchor: [36, 36],
+            });
+
+            const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
+            const id = `${data.lat},${data.lng}`;
+
+            const html = `
+                <div class="popup">
+                <strong>${data.type === "water" ? "💧 Water Source" : "❤️ AED"}</strong><br>
+                ${data.comment || "<i>No comment</i>"}<br>
+                👍 <span id="thumbs-${id}">${data.thumbs}</span> 
+                <button onclick="thumb('${id}')">Thumbs up</button>
+                </div>`;
+            marker.bindPopup(html);
+
+            if (save) {
+                stored.push(data);
+                localStorage.setItem("markers", JSON.stringify(stored));
+            }
+        }
+
+        // Thumbs up handler
+        function thumb(id) {
+            const el = document.getElementById(`thumbs-${id}`);
+            const newVal = +el.textContent + 1;
+            el.textContent = newVal;
+
+            // Update localStorage
+            const index = stored.findIndex(m => `${m.lat},${m.lng}` === id);
+            if (index !== -1) {
+                stored[index].thumbs = newVal;
+                localStorage.setItem("markers", JSON.stringify(stored));
+            }
+        }
+
+        // Expose thumb globally for button use
+        window.thumb = thumb;
+
+    </script>
+
+</body>
 </html>
