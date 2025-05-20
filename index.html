@@ -768,35 +768,32 @@
     </script>
     <script>
         // Initialize the Leaflet map
-        const map = L.map('map').setView([59.437, 24.75], 13); // Example: Tallinn
+        const map = L.map('map').setView([39.47, -0.38], 13); // Centered on Valencia
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Preset water locations
-        const presetWaterLocations = [
-            { lat: 59.437, lng: 24.7536, type: 'water', comment: 'Central Park Water Tap', thumbs: 0 },
-            { lat: 59.433, lng: 24.745, type: 'water', comment: 'Old Town Fountain', thumbs: 0 },
-            { lat: 59.44, lng: 24.76, type: 'water', comment: 'Community Center Dispenser', thumbs: 0 }
-        ];
-
-        // Marker storage (load from localStorage or start with presets)
-        let stored = JSON.parse(localStorage.getItem("markers") || "[]");
-        // Add preset water locations only if not already present
-        if (stored.length === 0) {
-            presetWaterLocations.forEach(m => stored.push(m));
-            localStorage.setItem("markers", JSON.stringify(stored));
-        }
-        // Add all markers to map
-        stored.forEach(m => addMarker(m, false));
-
-        // Optional: Add a marker for demo (can be removed if not needed)
-        // L.marker([59.437, 24.75])
-        //     .addTo(map)
-        //     .bindPopup('Emergency Resource Center')
-        //     .openPopup();
+        // Fetch locations from API and add to map
+        fetch('https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/fonts-daigua-publica-fuentes-de-agua-publica/records?limit=20') // Replace with your real API URL
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(item => {
+                    const markerData = {
+                        lat: item.geo_point_2d.lat,
+                        lng: item.geo_point_2d.lon,
+                        type: 'water',
+                        comment: item.calle,
+                        thumbs: 0,
+                        foto: item.foto // Optional: use in popup
+                    };
+                    addMarker(markerData, false);
+                });
+            })
+            .catch(err => {
+                console.error('Failed to load locations:', err);
+            });
 
         // On map click: prompt for water/AED
         map.on('click', e => {
@@ -815,8 +812,8 @@
             const icon = L.divIcon({
                 className: "custom-icon",
                 html: data.type === "water" ? "💧" : "❤️",
-                iconSize: [48, 48],
-                iconAnchor: [36, 36],
+                iconSize: [148, 148],
+                iconAnchor: [12, 12],
             });
 
             const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
@@ -824,8 +821,9 @@
 
             const html = `
                 <div class="popup">
-                <strong>${data.type === "water" ? "💧 Water Source" : "❤️ AED"}</strong><br>
+                <strong>💧 Water Source</strong><br>
                 ${data.comment || "<i>No comment</i>"}<br>
+                ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
                 👍 <span id="thumbs-${id}">${data.thumbs}</span> 
                 <button onclick="thumb('${id}')">Thumbs up</button>
                 </div>`;
