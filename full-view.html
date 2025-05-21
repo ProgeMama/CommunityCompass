@@ -1,115 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Compass 2025</title>
+    <title>Community Compass - Landing Page</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
     <style>
         :root {
             --primary: #ff3b30;
             --secondary: #222831;
-            --accent: #00adb5;
+            --accent: #7b9e30;
             --bg: antiquewhite;
-            /* või #fdf6e3 */
             --glass: rgba(255, 255, 255, 0.7);
             --glass-dark: rgba(34, 40, 49, 0.7);
             --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
             --radius: 22px;
-            --transition: 0.3s cubic-bezier(.4, 2, .6, 1);
         }
 
-        /* ... */
-
-        .user-type-selector {
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            min-height: 100vh;
+            color: var(--secondary);
             display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0 1rem 0;
-            flex-wrap: wrap;
-            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
         }
-
-
-        .user-type-btn.active,
-        .user-type-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 24px 0 rgba(255, 59, 48, 0.18);
-        }
-
 
         .header {
             background: linear-gradient(90deg, var(--primary), var(--accent));
             color: #fff;
-            padding: 2rem 0 1rem 0;
+            padding: 1.5rem;
             text-align: center;
-            border-radius: 0 0 var(--radius) var(--radius);
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            letter-spacing: 0.02em;
-            position: relative;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 2rem;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.3em;
-            letter-spacing: 0.04em;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.85;
-        }
-
-        .lang-select {
-            position: absolute;
-            top: 1.2rem;
-            right: 2rem;
-            background: var(--glass);
-            border-radius: 1.2em;
-            padding: 0.3em 1em;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-            font-size: 1em;
-            z-index: 10;
-        }
-
-        .lang-select select {
-            background: transparent;
-            border: none;
-            font-size: 1em;
-            color: #222;
-            outline: none;
-            cursor: pointer;
-            font-family: inherit;
+            font-size: 2rem;
+            margin: 0;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
-
-
-        .user-type-btn.active,
-        .user-type-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 24px 0 rgba(255, 59, 48, 0.18);
-        }
-
         .map-container {
             width: 100%;
             height: 320px;
-            background: linear-gradient(120deg, #e0e7ef 60%, #b2fefa 100%);
-            border-radius: var(--radius);
-            margin: 1.5rem 0 2rem 0;
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
@@ -120,16 +68,419 @@
             height: 100%;
             border-radius: var(--radius);
             z-index: 1;
+        }   
+
+        .info-section {
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
-        .map-mockup {
-            color: #888;
+        .public-announcements,
+        .community-board {
+            flex: 1 1 0;
+            background: #f6eee7;
+            /* light gray background */
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 1rem;
+            margin: 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .public-announcements h2,
+        .community-board h3 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 1.2rem;
-            opacity: 0.7;
+        }
+
+        .public-announcements h2 {
+            font-size: 1.2rem;
+        }
+
+        .community-board h3 {
+            font-size: 1.2rem;
+        }
+
+        .news-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .news-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .news-item.official {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .news-item.expanded {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .news-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        .news-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #555;
+            display: none;
+        }
+
+        .news-item.expanded p {
+            display: block;
+        }
+
+        .news-item .date {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .community-board {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .community-board h3 {
+            color: #3a5022;
+            margin-bottom: 0.5rem;
+        }
+
+        .community-board ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .community-board li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1em;
+        }
+
+        .community-board li:last-child {
+            border-bottom: none;
+        }
+
+        .community-board .reply-button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 1em;
+            padding: 0.3em 0.8em;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .community-board .reply-button:hover,
+        .community-board .reply-button:focus {
+            background: #bcf4f7;
+            color: var(--accent);
+        }
+
+        /* Chat modal styles */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            right: 2vw;
+            bottom: 2vw;
+            width: 340px;
+            max-width: 95vw;
+            height: auto;
+            background: none;
+            justify-content: flex-end;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .chat-modal.active {
+            display: flex;
+            pointer-events: auto;
+        }
+
+        .chat-modal .chat-content {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 340px;
+            max-width: 95vw;
+            min-height: 180px;
+            max-height: 70vh;
+            padding: 1.2em 1em 1em 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            position: relative;
+            transition: box-shadow 0.2s;
+        }
+
+        .chat-modal.minimized .chat-content {
+            height: 2.5em;
+            min-height: 0;
+            max-height: 2.5em;
+            overflow: hidden;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            gap: 0;
+        }
+
+        .chat-modal .chat-header {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--primary);
+            margin-bottom: 0.5em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-modal .chat-messages {
+            background: #f6eee7;
+            border-radius: 0.7em;
+            min-height: 120px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.7em;
+            font-size: 0.97em;
+            color: #222;
+        }
+
+        .chat-modal.minimized .chat-messages,
+        .chat-modal.minimized .chat-input-row {
+            display: none;
+        }
+
+        .chat-modal .chat-input-row {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .chat-modal .chat-input-row input {
+            flex: 1;
+            padding: 0.5em;
+            border-radius: 0.5em;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        .chat-modal .chat-input-row button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 0.5em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .chat-modal .close-chat {
+            font-size: 1.3em;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 0.5em;
+        }
+
+        .chat-modal .minimize-chat {
+            font-size: 1.1em;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 0.5em;
+        }
+
+        
+
+        @media (max-width: 600px) {
+            .chat-modal,
+            .chat-modal .chat-content {
+                width: 98vw;
+                min-width: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                border-radius: 0.7em 0.7em 0 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 0.3rem;
+            }
+
+            .map-container {
+                height: 180px;
+            }
+
+
+        }
+
+        @media (max-width: 900px) {
+            .info-section {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+
+        .public-announcements h2#public-news-header {
+            cursor: pointer;
+            width: auto;
+            /* Remove width:100% so it fits the box's padding */
+            background: #3a5022;
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 0.8em 1em;
+            margin-bottom: 1.2em;
+            margin-left: -1rem;
+            margin-right: -1rem;
+            /* Extend header to match box padding */
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 0.7em;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .public-announcements h2#public-news-header:hover,
+        .public-announcements h2#public-news-header.active {
+            background: #abb99b;
+            color: #3a5022;
+            border-radius: #3a5022;
+            /* forest green */
+            color: #fff;
+        }
+
+        .tab-icon-btn {
+            width: 144px;
+            height: 144px;
+            border-radius: 50%;
+            background: #f6eee7;
+            border: 2px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7em;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s, color 0.2s;
+            position: relative;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Set a custom image for each tab button */
+        #city-news-tab {
+            background-image: url('city-news.png');
+        }
+
+        #paid-adverts-tab {
+            background-image: url('paid-adverts.png');
+        }
+
+        #my-adverts-tab {
+            background-image: url('my-adverts.png');
+        }
+
+        /* Show the icon */
+        #city-news-tab i {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            pointer-events: none;
             z-index: 2;
         }
 
-        .resource-grid {
+        #paid-adverts-tab i {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #my-adverts-tab i {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Hide the icon if you want only the image to show */
+        .tab-icon-btn i {
+            display: none;
+        }
+
+        .notification-badge {
+            min-width: 1.5em;
+            min-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            position: absolute;
+            top: 50%;
+            right: -1.2em;
+            /* Move fully outside the circle to the right */
+            transform: translateY(-50%);
+            background: #ff3b30;
+            color: #fff;
+            border-radius: 1em;
+            padding: 0.1em 0.6em;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        
+
+
+.resource-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 2rem;
@@ -204,20 +555,13 @@
             box-shadow: 0 12px 40px 0 rgba(0, 173, 181, 0.18);
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 800px) {
             .container {
                 padding: 0 0.3rem;
             }
 
             .map-container {
                 height: 180px;
-            }
-
-            .emergency-button {
-                padding: 1em 1.5em;
-                font-size: 1em;
-                right: 10px;
-                bottom: 10px;
             }
 
             .lang-select {
@@ -431,11 +775,139 @@
                 padding: 0.3em 0.7em 0.3em 0.5em;
             }
         }
+
+        .phone-frame {
+            max-width: 430px;
+            min-width: 320px;
+            margin: 2.5rem auto;
+            border: 12px solid #222831;
+            border-radius: 38px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 2px 16px 0 rgba(0,0,0,0.12);
+            background: #222831;
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+        }
+        .phone-notch {
+            width: 120px;
+            height: 18px;
+            background: #111;
+            border-radius: 0 0 18px 18px;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .phone-inner {
+            background: var(--bg);
+            border-radius: 26px;
+            min-height: 600px;
+            min-width: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 2rem;
+        }
+        /* Make sure the map fits inside the phone frame */
+        .phone-frame .map-container,
+        .phone-frame #map {
+            border-radius: 22px;
+        }
+        /* Optional: Hide scrollbars for a cleaner look */
+        .phone-inner::-webkit-scrollbar {
+            width: 0 !important;
+            background: transparent !important;
+        }
+        @media (max-width: 600px) {
+            .phone-frame {
+                max-width: 100vw;
+                border-width: 6px;
+                border-radius: 18px;
+            }
+            .phone-inner {
+                border-radius: 12px;
+            }
+        }
     </style>
 </head>
 
 <body>
+<div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-inner">
+    <div class="header">
+        <h1><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
+    </div>
 
+    <!-- Tabs above public news -->
+    <div class="container" style="margin-bottom: 1.5rem;">
+        <div class="tab-bar" style="display: flex; gap: 1em; justify-content: center; margin-bottom: 0.5em;">
+            <button class="tab-icon-btn" id="city-news-tab" title="City News">
+                <i class="fa-solid fa-newspaper"></i>
+            </button>
+            <button class="tab-icon-btn" id="local-events-tab" title="Local Events & Establishments">
+                <i class="fa-solid fa-store"></i>
+            </button>
+            <button class="tab-icon-btn" id="my-adverts-tab" title="My Adverts" style="position:relative;">
+                <i class="fa-solid fa-user"></i>
+                <span id="my-adverts-badge" class="notification-badge"
+                    style="display:none; position:absolute; top:0.2em; right:0.2em; background:#ff3b30; color:#fff; border-radius:1em; font-size:0.8em; padding:0.1em 0.6em;">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="info-section">
+            <!-- Replace community board with advert tiles -->
+            <div class="adverts-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5em;">
+                <div class="advert-tile" style="background:var(--glass);border-radius:18px;box-shadow:var(--shadow);padding:1.2em;display:flex;flex-direction:column;align-items:center;gap:0.7em;">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" alt="Bakery" style="width:90px;height:90px;border-radius:14px;object-fit:cover;">
+                    <h3 style="margin:0;font-size:1.1em;color:#ff3b30;">Sunrise Bakery</h3>
+                    <div style="font-size:0.98em;color:#333;text-align:center;">Fresh bread daily! <br>10% off for first responders.</div>
+                    <div style="font-size:0.93em;color:#888;">📍 Main St 12</div>
+                </div>
+                <div class="advert-tile" style="background:var(--glass);border-radius:18px;box-shadow:var(--shadow);padding:1.2em;display:flex;flex-direction:column;align-items:center;gap:0.7em;">
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" alt="Cafe" style="width:90px;height:90px;border-radius:14px;object-fit:cover;">
+                    <h3 style="margin:0;font-size:1.1em;color:#00adb5;">Green Leaf Café</h3>
+                    <div style="font-size:0.98em;color:#333;text-align:center;">Free coffee with any breakfast order.<br>Vegan options available.</div>
+                    <div style="font-size:0.93em;color:#888;">📍 Park Ave 7</div>
+                </div>
+                <div class="advert-tile" style="background:var(--glass);border-radius:18px;box-shadow:var(--shadow);padding:1.2em;display:flex;flex-direction:column;align-items:center;gap:0.7em;">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Pharmacy" style="width:90px;height:90px;border-radius:14px;object-fit:cover;">
+                    <h3 style="margin:0;font-size:1.1em;color:#7b9e30;">Valencia Pharmacy</h3>
+                    <div style="font-size:0.98em;color:#333;text-align:center;">Free health check-ups every Friday.<br>Ask about our loyalty card!</div>
+                    <div style="font-size:0.93em;color:#888;">📍 Health Sq 3</div>
+                </div>
+                <div class="advert-tile" style="background:var(--glass);border-radius:18px;box-shadow:var(--shadow);padding:1.2em;display:flex;flex-direction:column;align-items:center;gap:0.7em;">
+                    <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Gym" style="width:90px;height:90px;border-radius:14px;object-fit:cover;">
+                    <h3 style="margin:0;font-size:1.1em;color:#b45309;">FitZone Gym</h3>
+                    <div style="font-size:0.98em;color:#333;text-align:center;">1 week free trial for new members.<br>Open 24/7.</div>
+                    <div style="font-size:0.93em;color:#888;">📍 River Rd 21</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal">
+        <div class="chat-content">
+            <div class="chat-header" id="chatHeader">
+                <span>Chat</span>
+                <span>
+                    <button class="minimize-chat" id="minimizeChatBtn" title="Minimize">&#8211;</button>
+                    <button class="close-chat" id="closeChatBtn" title="Close">&times;</button>
+                </span>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <form class="chat-input-row" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off" required />
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="map-container">
             <div id="map"></div>
@@ -444,218 +916,151 @@
 
         <div id="marker-filters" style="margin: 1em 0; text-align:center;">
         <div style="display:inline-block; margin-right:2em;">
-            <strong>Public resources:</strong>
-            <label><input type="checkbox" class="filter-checkbox" value="water" checked> 💧 Water</label>
-            <label><input type="checkbox" class="filter-checkbox" value="aed" checked> ❤️ AED</label>
-            <label><input type="checkbox" class="filter-checkbox" value="atm" checked> 🏧 ATM</label>
-            <label><input type="checkbox" class="filter-checkbox" value="medical" checked> 🏥 Medical</label>
-            <label><input type="checkbox" class="filter-checkbox" value="fuel" checked> ⛽ Fuel</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Playgrounds" checked>  Playgrounds</label>
-
-        </div>
-        <div style="display:inline-block;">
-            <strong>Community resources:</strong>
-            <label><input type="checkbox" class="filter-checkbox" value="Food" checked> 🍏 Food</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Car" checked> 🚗 Car share</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Pet" checked> 🐕 Dog walking</label>
-            <label><input type="checkbox" class="filter-checkbox" value="Other" checked>🛟 Other</label>
+            <strong>Local events and shops:</strong>
+            <label><input type="checkbox" class="filter-checkbox" value="Cafe" checked>  Cafe</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Shop" checked>  Shop</label>
+            <label><input type="checkbox" class="filter-checkbox" value="Books" checked>  Books</label>
         </div>
         </div>
 
     </div>
-    <button class="emergency-button"><i class="fa-solid fa-siren-on"></i> <span class="sos-btn">EMERGENCY
-            SOS</span></button>
-    
-    <!-- Add this modal just before the closing </body> tag -->
-<div id="addMarkerModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close" id="closeAddMarkerModal">&times;</span>
-    <h3>Add Resource</h3>
-    <form id="addMarkerForm">
-      <label>Type:
-        <select id="markerType" required>
-          <option value="Water">💧 Water</option>
-          <option value="AED">❤️ AED</option>
-          <option value="Fruit">🍏 fruit</option>
-          <option value="Dog walking">🐕 Looking dog walkers</option>
-        </select>
-      </label><br><br>
-      <label>Comment:<br>
-        <input type="text" id="markerComment" maxlength="100" placeholder="Optional comment">
-      </label><br><br>
-      <label>Photo URL:<br>
-        <input type="url" id="markerPhoto" placeholder="http://...">
-      </label><br><br>
-      <input type="hidden" id="markerLat">
-      <input type="hidden" id="markerLng">
-      <button type="submit" class="submit-btn">Add Marker</button>
-    </form>
-  </div>
-</div>
+
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        
     <script>
-        // Initialize the Leaflet map
-        const map = L.map('map').setView([39.47, -0.38], 13); // Centered on Valencia
+    // Ensure only one map instance and avoid double initialization
+    let map;
+    let allMarkers = [];
+    let tempMarker = null;
 
-        // Add OpenStreetMap tiles
+    function fixMapSize() {
+        setTimeout(() => {
+            if (map) map.invalidateSize();
+        }, 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Remove any previous map instance if present (for hot reload/dev)
+        if (window._leafletMap && window._leafletMap.remove) {
+            window._leafletMap.remove();
+            window._leafletMap = null;
+        }
+        // Ensure #map is empty
+        document.getElementById('map').innerHTML = '';
+
+        // Initialize the map
+        map = L.map('map', { zoomControl: true, attributionControl: true }).setView([39.47, -0.38], 13);
+        window._leafletMap = map; // for compatibility with other code
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Fetch locations from API and add to map
-        fetch('https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/fonts-daigua-publica-fuentes-de-agua-publica/records?limit=20') // Replace with your real API URL
-            .then(response => response.json())
-            .then(data => {
-                data.results.forEach(item => {
-                    const markerData = {
-                        lat: item.geo_point_2d.lat,
-                        lng: item.geo_point_2d.lon,
-                        type: 'water',
-                        comment: item.calle,
-                        thumbs: 0,
-                        foto: item.foto // Optional: use in popup
-                    };
-                    addMarker(markerData, false);
-                });
-            })
-            .catch(err => {
-                console.error('Failed to load locations:', err);
-            });
+        fixMapSize();
+        window.addEventListener('resize', fixMapSize);
+        document.addEventListener('visibilitychange', fixMapSize);
 
-        // On map click: prompt for water/AED
-        map.on('click', function(e) {
-        // Remove any existing temp marker
-        if (window.tempMarker) {
-            map.removeLayer(window.tempMarker);
+        // Fetch locations from API and add to map
+        
+        });
+
+        // Filtering logic
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const enabledTypes = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => cb.value.toLowerCase());
+                allMarkers.forEach(obj => {
+                    if (enabledTypes.includes(obj.type)) {
+                        map.addLayer(obj.marker);
+                    } else {
+                        map.removeLayer(obj.marker);
+                    }
+                });
+            });
+        });
+    
+
+    function addMarker(data, save) {
+        const type = (data.type || '').toLowerCase();
+        const icon = L.divIcon({
+            className: "custom-icon",
+            html: `<span style="font-size:18px;line-height:1;">${
+                type === "water" ? "💧"
+                : type === "aed" ? "❤️"
+                : type === "atm" ? "🏧"
+                : type === "medical" ? "🏥"
+                : type === "fuel" ? "⛽"
+                : type === "fruit" ? "🍏"
+                : type === "car" ? "🚗"
+                : type === "pet" ? "🐕"
+                : type === "other" ? "🛟"
+                : type === "playgrounds" ? "🛝"
+                : "❓"
+            }</span>`,
+            iconSize: [48, 48],
+            iconAnchor: [24, 24],
+        });
+
+        const label = type === "water" ? "💧 Water Source"
+            : type === "aed" ? "❤️ AED"
+            : type === "atm" ? "🏧 ATM"
+            : type === "medical" ? "🏥 Medical"
+            : type === "fuel" ? "⛽ Fuel"
+            : type === "fruit" ? "🍏 Food"
+            : type === "car" ? "🚗 Car"
+            : type === "pet" ? "🐕 Dog walking"
+            : type === "other" ? "🛟 Other"
+            : "❓";
+
+        let needGive = "";
+        if (data.need || data.give) {
+            needGive += `<div>`;
+            if (data.need) needGive += `<span style="color:#ff3b30;">🟧 Need</span><br>`;
+            if (data.give) needGive += `<span style="color:#00adb5;">🟩 Give</span><br>`;
+            needGive += `</div>`;
         }
 
-        // Place a temporary marker
-        window.tempMarker = L.marker(e.latlng).addTo(map);
+        const id = `${data.lat},${data.lng}`;
+        const isCommunity = ["fruit", "car", "pet", "other"].includes(type);
 
-        // Popup HTML for public/private selection
-        const popupHtml = `
-            <div>
-                <strong>Add Resource</strong><br>
-                <button id="publicBtn">Public</button>
-                <button id="privateBtn">Private</button>
-            </div>
-        `;
+        const chatBtn = isCommunity
+            ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
+            : "";
 
-        window.tempMarker.bindPopup(popupHtml).openPopup();
+        const html = `
+            <div class="popup">
+            <strong>${label}</strong><br>
+            ${needGive}
+            ${data.comment || "<i>No comment</i>"}<br>
+            ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
+            <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
+            ${chatBtn}
+            </div>`;
 
-        // Wait for popup to open, then attach event listeners
-        setTimeout(() => {
-            const publicBtn = document.getElementById('publicBtn');
-            const privateBtn = document.getElementById('privateBtn');
-            if (publicBtn) {
-                publicBtn.onclick = (e) => {
-                    L.DomEvent.stopPropagation(e);
-                    e.stopPropagation();
-                    showTypeSelection(window.tempMarker.getLatLng(), 'Public');
-                };
-            }
-            if (privateBtn) {
-                privateBtn.onclick = (e) => {
-                    L.DomEvent.stopPropagation(e);
-                    e.stopPropagation();
-                    showTypeSelection(window.tempMarker.getLatLng(), 'Community');
-                };
-            }
-        }, 100);
-    });
+        const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
+        marker.bindPopup(html);
 
-        const allMarkers = []; // Store all markers with their type
-
-function addMarker(data, save) {
-    const icon = L.divIcon({
-        className: "custom-icon",
-        html: `<span style="font-size:18px;line-height:1;">${
-            data.type === "water" ? "💧"
-            : data.type === "aed" ? "❤️"
-            : data.type === "atm" ? "🏧"
-            : data.type === "medical" ? "🏥"
-            : data.type === "fuel" ? "⛽"
-            : data.type === "fruit" ? "🍏"
-            : data.type === "car" ? "🚗"
-            : data.type === "pet" ? "🐕"
-            : data.type === "other" ? "🛟"
-            : "❓"
-        }</span>`,
-        iconSize: [48, 48],
-        iconAnchor: [24, 24],
-    });
-
-    const label = data.type === "water" ? "💧 Water Source"
-        : data.type === "aed" ? "❤️ AED"
-        : data.type === "atm" ? "🏧 ATM"
-        : data.type === "medical" ? "🏥 Medical"
-        : data.type === "fuel" ? "⛽ Fuel"
-        : data.type === "fruit" ? "🍏 Food"
-        : data.type === "car" ? "🚗 Car"
-        : data.type === "pet" ? "🐕 Dog walking"
-        : data.type === "other" ? "🛟 Other"
-        : "❓";
-
-    // Show "Need" and "Give" if present
-    let needGive = "";
-    if (data.need || data.give) {
-        needGive += `<div>`;
-        if (data.need) needGive += `<span style="color:#ff3b30;">🟧 Need</span><br>`;
-        if (data.give) needGive += `<span style="color:#00adb5;">🟩 Give</span><br>`;
-        needGive += `</div>`;
+        allMarkers.push({ marker, type });
+        if (save) {
+            stored.push(data);
+            localStorage.setItem("markers", JSON.stringify(stored));
+        }
     }
 
-    const id = `${data.lat},${data.lng}`;
-    // Check if this is a community marker
-    const isCommunity = ["fruit", "car", "pet", "other"].includes(data.type);
-
-    const chatBtn = isCommunity
-        ? `<button class="user-type-btn" style="margin-top:8px;" onclick="startChat('${id}')">💬 Start Chat</button>`
-        : "";
-
-    const html = `
-        <div class="popup">
-        <strong>${label}</strong><br>
-        ${needGive}
-        ${data.comment || "<i>No comment</i>"}<br>
-        ${data.foto ? `<img src="${data.foto}" alt="Photo" style="max-width:120px;"><br>` : ""}
-        <button class="user-type-btn" style="margin-top:8px;" onclick="thumb('${id}')">👍 Thumbs up <span id="thumbs-${id}">${data.thumbs}</span></button>
-        ${chatBtn}
-        </div>`;
-
-    const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
-    marker.bindPopup(html);
-
-    // Store marker and its type for filtering
-    allMarkers.push({ marker, type: data.type.toLowerCase() });
-
-    if (save) {
-        stored.push(data);
-        localStorage.setItem("markers", JSON.stringify(stored));
+    function thumb(id) {
+        const markerObj = allMarkers.find(obj => `${obj.marker.getLatLng().lat},${obj.marker.getLatLng().lng}` === id);
+        if (markerObj) {
+            if (!markerObj.marker._thumbs) markerObj.marker._thumbs = 0;
+            markerObj.marker._thumbs++;
+            const el = document.getElementById('thumbs-' + id);
+            if (el) el.textContent = markerObj.marker._thumbs;
+        }
     }
-}
 
-function thumb(id) {
-    // Find the marker data by id
-    const markerObj = allMarkers.find(obj => `${obj.marker.getLatLng().lat},${obj.marker.getLatLng().lng}` === id);
-    if (markerObj) {
-        // Update thumbs count in data
-        if (!markerObj.marker._thumbs) markerObj.marker._thumbs = 0;
-        markerObj.marker._thumbs++;
-        // Update popup display
-        const el = document.getElementById('thumbs-' + id);
-        if (el) el.textContent = markerObj.marker._thumbs;
-        // Optionally update localStorage if you want persistence
+    function startChat(id) {
+        alert("Chat feature coming soon for marker: " + id);
     }
-}
-
-// Add this function globally (for now it just alerts, you can replace with your chat logic)
-function startChat(id) {
-    alert("Chat feature coming soon for marker: " + id);
-}
-    </script>
+    // ...existing code...
+</script>
 
     <script>
 
@@ -702,103 +1107,485 @@ function startChat(id) {
         });
     </script>
     <script>
-        function showTypeSelection(latlng, accessType) {
-    // Define icons for each access type
-    const publicIcons = [
-        { type: 'water', icon: '💧' },
-        { type: 'aed', icon: '❤️' },
-        { type: 'atm', icon: '🏧' },
-        { type: 'medical', icon: '🏥' },
-        { type: 'fuel', icon: '⛽' }
-    ];
-    const communityIcons = [
-        { type: 'fruit', icon: '🍏' },
-        { type: 'car', icon: '🚗' },
-        { type: 'pet', icon: '🐕' },
-        { type: 'other', icon: '🛟' }
-    ];
+    function showTypeSelection(latlng, accessType) {
+        const publicIcons = [
+            { type: 'water', icon: '💧' },
+            { type: 'aed', icon: '❤️' },
+            { type: 'atm', icon: '🏧' },
+            { type: 'medical', icon: '🏥' },
+            { type: 'fuel', icon: '⛽' }
+        ];
+        const communityIcons = [
+            { type: 'fruit', icon: '🍏' },
+            { type: 'car', icon: '🚗' },
+            { type: 'pet', icon: '🐕' },
+            { type: 'other', icon: '🛟' }
+        ];
+        const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
 
-    // Pick which icons to show
-    const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
+        let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
+        icons.forEach(i => {
+            html += `<button class="icon-btn" data-type="${i.type}" type="button">${i.icon}</button> `;
+        });
+        html += `</div>`;
 
-    let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
-    icons.forEach(i => {
-        html += `<button class="icon-btn" data-type="${i.type}">${i.icon}</button> `;
-    });
-    html += `</div>`;
+        if (tempMarker) {
+            tempMarker.setPopupContent(html).openPopup();
+        }
 
-    window.tempMarker.setPopupContent(html).openPopup();
+        setTimeout(() => {
+            // Use event delegation to ensure the buttons are clickable
+            const popupContent = document.getElementById('popup-content');
+            if (popupContent) {
+                popupContent.addEventListener('mousedown', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                });
+                popupContent.addEventListener('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    const btn = e.target.closest('.icon-btn');
+                    if (btn && btn.dataset.type) {
+                        showCommentForm(latlng, accessType, btn.dataset.type);
+                    }
+                });
+            }
+        }, 100);
+    }
 
-    setTimeout(() => {
-        // Prevent map click from firing when clicking inside the popup
-        const popupContent = document.getElementById('popup-content');
-        if (popupContent) {
-            popupContent.addEventListener('mousedown', function(e) {
-                L.DomEvent.stopPropagation(e);
+    function showCommentForm(latlng, accessType, type) {
+        const isCommunity = accessType.toLowerCase() === 'community';
+        const checkboxes = isCommunity ? `
+            <label><input type="checkbox" id="needBox"> Need</label>
+            <label><input type="checkbox" id="giveBox"> Give</label><br>
+        ` : '';
+
+        const html = `
+            <div>
+                <strong>Add Details</strong><br>
+                ${checkboxes}
+                <input type="text" id="markerComment" placeholder="Optional comment"><br>
+                <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
+                <button id="addMarkerBtn" type="button">Add Marker</button>
+            </div>
+        `;
+        if (tempMarker) {
+            tempMarker.setPopupContent(html).openPopup();
+        }
+
+        setTimeout(() => {
+            const addBtn = document.getElementById('addMarkerBtn');
+            if (addBtn) {
+                addBtn.onclick = () => {
+                    const comment = document.getElementById('markerComment').value;
+                    const foto = document.getElementById('markerPhoto').value;
+                    let need = false, give = false;
+                    if (isCommunity) {
+                        need = document.getElementById('needBox').checked;
+                        give = document.getElementById('giveBox').checked;
+                    }
+                    if (tempMarker) {
+                        map.removeLayer(tempMarker);
+                        tempMarker = null;
+                    }
+                    const marker = {
+                        lat: latlng.lat,
+                        lng: latlng.lng,
+                        type: type.toLowerCase(),
+                        comment,
+                        thumbs: 0,
+                        foto,
+                        access: accessType,
+                        need,
+                        give
+                    };
+                    addMarker(marker, true);
+                };
+            }
+        }, 100);
+    }
+    // ...existing code...
+</script>
+
+    <script>
+        // Date range for news
+        const startDate = new Date('2025-05-26');
+        const endDate = new Date('2025-08-08');
+
+        // 7 official news items in English
+        const sampleNews = [
+            {
+                title: "National Crisis Exercise",
+                content: "A national crisis exercise will take place in Estonia on 03.06.2025. Short interruptions in communication and electricity services are possible.",
+                date: "2025-06-03",
+                source: "Estonian Rescue Board",
+                official: true
+            }
+        ];
+
+        // Sample cooperative news and community posts (merged)
+        const sampleCommunityBoard = [
+            {
+                title: "New Parking Regulations",
+                content: "Please be aware of the new parking regulations starting July 1st.",
+                date: "2025-06-20",
+                type: "announcement"
+            },
+            {
+                title: "Upcoming Building Maintenance",
+                content: "Building maintenance scheduled for June 28th. Expect some noise.",
+                date: "2025-06-25",
+                type: "announcement"
+            },
+            {
+                title: "Selling: Gently Used Bicycle",
+                content: "Selling a gently used bicycle for 50 EUR. Contact John at Apt 2B.",
+                date: "2025-06-18",
+                type: "sale"
+            },
+            {
+                title: "Offering: Free Piano Lessons",
+                content: "Offering free piano lessons to beginners. Contact Jane at Apt 3A.",
+                date: "2025-06-22",
+                type: "offer"
+            },
+            {
+                title: "Extra tomatoes from my garden",
+                content: "I have a basket of fresh tomatoes to give away. Pick up in the evening.",
+                date: "2025-06-10",
+                type: "give",
+                author: "Anna"
+            },
+            {
+                title: "Need help fixing my bike",
+                content: "My bike chain broke. Anyone with tools or experience to help?",
+                date: "2025-06-12",
+                type: "need",
+                author: "Markus"
+            }
+        ];
+
+        // Function to check if a date is within the specified range
+        function isDateInRange(dateString, startDate, endDate) {
+            const date = new Date(dateString);
+            return date >= startDate && date <= endDate;
+        }
+
+        // Function to load news
+        function loadNews() {
+            const newsFeed = document.getElementById('news-feed');
+            const newsDropdown = document.getElementById('news-dropdown');
+            newsFeed.innerHTML = '';
+
+            // Sort by date (newest first)
+            const sortedNews = sampleNews
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (sortedNews.length === 0) {
+                newsFeed.innerHTML = '<div class="news-item"><h3>No announcements</h3></div>';
+                newsDropdown.style.display = 'none';
+                return;
+            }
+
+            // Show only the first announcement
+            const first = sortedNews[0];
+            const firstNewsItem = document.createElement('div');
+            firstNewsItem.className = `news-item ${first.official ? 'official' : ''}`;
+            firstNewsItem.innerHTML = `
+                <h3>${first.title}</h3>
+                <p>${first.content}</p>
+                <div class="date">${first.date} • ${first.source}</div>
+            `;
+            firstNewsItem.addEventListener('click', function () {
+                this.classList.toggle('expanded');
             });
-            popupContent.addEventListener('click', function(e) {
-                L.DomEvent.stopPropagation(e);
+            newsFeed.appendChild(firstNewsItem);
+
+            // If more, prepare the rest but don't show button
+            if (sortedNews.length > 1) {
+                newsDropdown.style.display = 'none';
+                newsDropdown.innerHTML = '';
+                for (let i = 1; i < sortedNews.length; ++i) {
+                    const item = sortedNews[i];
+                    const newsItem = document.createElement('div');
+                    newsItem.className = `news-item ${item.official ? 'official' : ''}`;
+                    newsItem.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <p>${item.content}</p>
+                        <div class="date">${item.date} • ${item.source}</div>
+                    `;
+                    newsItem.addEventListener('click', function () {
+                        this.classList.toggle('expanded');
+                    });
+                    newsDropdown.appendChild(newsItem);
+                }
+            } else {
+                newsDropdown.style.display = 'none';
+            }
+        }
+
+        // Function to load community board (merged cooperative news and posts)
+        function loadCommunityBoard() {
+            const boardList = document.getElementById('community-board-list');
+            boardList.innerHTML = '';
+
+            // Filter by date and sort by date descending
+            const filtered = sampleCommunityBoard
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filtered.length === 0) {
+                boardList.innerHTML = '<li>No posts or announcements available.</li>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const listItem = document.createElement('li');
+                let meta = item.date;
+                if (item.author) meta += ' • ' + item.author;
+
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${item.title}</strong><br>
+                        <span style="font-size:0.95em;color:#555;">${item.content}</span><br>
+                        <span class="date" style="font-size:0.85em;color:#888;">${meta}</span>
+                    </div>
+                    ${item.type !== 'announcement' ? '<button class="reply-button">Reply</button>' : ''}
+                `;
+
+                boardList.appendChild(listItem);
+            });
+
+            // Attach chat popup to reply buttons
+            attachReplyChatHandlers();
+        }
+
+        // Example: Set this to the number of new messages for "My Adverts"
+        let myAdvertsMessages = 2; // Set to 0 for no badge
+
+        function updateMyAdvertsBadge() {
+            const badge = document.getElementById('my-adverts-badge');
+            if (myAdvertsMessages > 0) {
+                badge.textContent = myAdvertsMessages;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNews();
+            loadCommunityBoard();
+            updateMyAdvertsBadge();
+
+            // Change: open a new page on header click
+            const header = document.getElementById('public-news-header');
+            header.onclick = function () {
+                window.location.href = 'public-news.html';
+            };
+            header.onmouseenter = function () {
+                header.classList.add('active');
+            };
+            header.onmouseleave = function () {
+                header.classList.remove('active');
+            };
+
+            // Tab click handlers
+            document.getElementById('city-news-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                alert('Navigating to "City News" (not implemented yet)');
+            });
+            document.getElementById('local-events-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                window.location.href = 'full-view.html';
+            });
+            document.getElementById('my-adverts-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                alert('Navigating to "My Adverts" (not implemented yet)');
+            });
+
+            // Make minimize and close functional for the chatbox
+            document.getElementById('closeChatBtn').onclick = function () {
+                document.getElementById('chatModal').classList.remove('active', 'minimized');
+            };
+            document.getElementById('minimizeChatBtn').onclick = function (e) {
+                e.stopPropagation();
+                const chatModal = document.getElementById('chatModal');
+                chatModal.classList.toggle('minimized');
+            };
+            document.getElementById('chatHeader').onclick = function () {
+                const chatModal = document.getElementById('chatModal');
+                if (chatModal.classList.contains('minimized')) {
+                    chatModal.classList.remove('minimized');
+                }
+            };
+            window.addEventListener('keydown', function (e) {
+                if (e.key === "Escape") document.getElementById('chatModal').classList.remove('active', 'minimized');
+            });
+        });
+
+        // Navigation
+        document.getElementById('resources-card').onclick = () => {
+            window.location.href = 'full-view.html';
+        };
+
+        // My Announcements button
+        // document.querySelector('.community-board .my-announcements-button').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     alert('Navigating to "My Announcements" page (not implemented yet)');
+        // });
+
+        // Add handlers for the new buttons
+        document.getElementById('city-news-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "City News" (not implemented yet)');
+        });
+        document.getElementById('paid-adverts-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "Paid Adverts" (not implemented yet)');
+        });
+        document.getElementById('my-adverts-btn').addEventListener('click', function (event) {
+            event.preventDefault();
+            alert('Navigating to "My Adverts" (not implemented yet)');
+        });
+
+        // Simple in-memory chat store for demo (keyed by post title)
+        const chatStore = {};
+
+        // Open chat modal for a given post
+        function openChat(postTitle, recipient) {
+            const chatModal = document.getElementById('chatModal');
+            const chatHeader = document.getElementById('chatHeader');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            chatHeader.querySelector('span').textContent = postTitle;
+            chatModal.classList.add('active');
+            chatModal.classList.remove('minimized');
+            chatInput.value = '';
+            chatInput.focus();
+
+            // Load messages
+            const key = postTitle;
+            chatMessages.innerHTML = '';
+            if (chatStore[key]) {
+                chatStore[key].forEach(msg => {
+                    const div = document.createElement('div');
+                    div.textContent = msg;
+                    chatMessages.appendChild(div);
+                });
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Attach send handler (functional message sending)
+            const chatForm = document.getElementById('chatForm');
+            chatForm.onsubmit = function (ev) {
+                ev.preventDefault();
+                const val = chatInput.value.trim();
+                if (!val) return;
+                if (!chatStore[key]) chatStore[key] = [];
+                chatStore[key].push("You: " + val);
+                // Show the new message immediately
+                chatMessages.innerHTML = '';
+                chatStore[key].forEach(msg => {
+                    const div = document.createElement('div');
+                    div.textContent = msg;
+                    chatMessages.appendChild(div);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                chatInput.value = '';
+                chatInput.focus();
+                // Simulate reply
+                setTimeout(() => {
+                    chatStore[key].push((recipient ? recipient : "Other") + ": " + "Thanks for your message!");
+                    if (chatModal.classList.contains('active') && !chatModal.classList.contains('minimized')) {
+                        chatMessages.innerHTML = '';
+                        chatStore[key].forEach(msg => {
+                            const div = document.createElement('div');
+                            div.textContent = msg;
+                            chatMessages.appendChild(div);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }, 800);
+            };
+            function renderChatMessages() {
+                chatMessages.innerHTML = '';
+                chatStore[key].forEach(msg => {
+                    const div = document.createElement('div');
+                    div.textContent = msg;
+                    chatMessages.appendChild(div);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Close chat modal
+        document.getElementById('closeChatBtn').onclick = function () {
+            document.getElementById('chatModal').classList.remove('active', 'minimized');
+        };
+        // Minimize chat modal
+        document.getElementById('minimizeChatBtn').onclick = function (e) {
+            e.stopPropagation();
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.toggle('minimized');
+        };
+        // Restore chat modal on header click if minimized
+        document.getElementById('chatHeader').onclick = function () {
+            const chatModal = document.getElementById('chatModal');
+            if (chatModal.classList.contains('minimized')) {
+                chatModal.classList.remove('minimized');
+            }
+        };
+        window.addEventListener('keydown', function (e) {
+            if (e.key === "Escape") document.getElementById('chatModal').classList.remove('active', 'minimized');
+        });
+
+        // Attach chat popup to reply buttons after community board is loaded
+        function attachReplyChatHandlers() {
+            document.querySelectorAll('.community-board .reply-button').forEach(btn => {
+                btn.onclick = function () {
+                    const li = btn.closest('li');
+                    const title = li ? li.querySelector('strong')?.textContent || 'Post' : 'Post';
+                    const author = li ? (li.querySelector('.date')?.textContent.split('•')[1] || '').trim() : '';
+                    openChat(title, author);
+                };
             });
         }
-        document.querySelectorAll('.icon-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                showCommentForm(latlng, accessType, btn.dataset.type);
-            };
-        });
-    }, 100);
-}
 
-function showCommentForm(latlng, accessType, type) {
-    // Only show checkboxes for community/private
-    const isCommunity = accessType.toLowerCase() === 'community';
-    const checkboxes = isCommunity ? `
-        <label><input type="checkbox" id="needBox"> Need</label>
-        <label><input type="checkbox" id="giveBox"> Give</label><br>
-    ` : '';
+        // Initialize Leaflet map if element exists
+        if (document.getElementById('map')) {
+            // Prevent double initialization
+            if (!window._leafletMap) {
+                window._leafletMap = L.map('map', {
+                    zoomControl: true,
+                    attributionControl: true
+                }).setView([39.47, -0.38], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(window._leafletMap);
 
-    const html = `
-        <div>
-            <strong>Add Details</strong><br>
-            ${checkboxes}
-            <input type="text" id="markerComment" placeholder="Optional comment"><br>
-            <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
-            <button id="addMarkerBtn">Add Marker</button>
-        </div>
-    `;
-    window.tempMarker.setPopupContent(html).openPopup();
-
-    setTimeout(() => {
-        document.getElementById('addMarkerBtn').onclick = () => {
-            const comment = document.getElementById('markerComment').value;
-            const foto = document.getElementById('markerPhoto').value;
-            // Get checkbox values if community
-            let need = false, give = false;
-            if (isCommunity) {
-                need = document.getElementById('needBox').checked;
-                give = document.getElementById('giveBox').checked;
+                // Fix for map tiles splitting: force size after short delay and on tab visibility
+                setTimeout(() => window._leafletMap.invalidateSize(), 400);
+                window.addEventListener('resize', () => {
+                    setTimeout(() => window._leafletMap.invalidateSize(), 100);
+                });
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden && window._leafletMap) {
+                        setTimeout(() => window._leafletMap.invalidateSize(), 100);
+                    }
+                });
+            } else {
+                setTimeout(() => window._leafletMap.invalidateSize(), 200);
             }
-            // Remove the temp marker first
-            if (window.tempMarker) {
-                map.removeLayer(window.tempMarker);
-                window.tempMarker = null;
-            }
-            // Add the permanent marker with the selected icon and options
-            const marker = {
-                lat: latlng.lat,
-                lng: latlng.lng,
-                type: type.toLowerCase(),
-                comment,
-                thumbs: 0,
-                foto,
-                access: accessType,
-                need,
-                give
-            };
-            addMarker(marker, true);
-        };
-    }, 100);
-}
+        }
+        // After initializing the map
+        if (window._leafletMap) {
+            setTimeout(() => window._leafletMap.invalidateSize(), 200);
+        }
     </script>
+
+    </div>
+</div>
+
 </body>
+
 </html>

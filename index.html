@@ -775,10 +775,70 @@
                 padding: 0.3em 0.7em 0.3em 0.5em;
             }
         }
+
+        .phone-frame {
+            max-width: 430px;
+            min-width: 320px;
+            margin: 2.5rem auto;
+            border: 12px solid #222831;
+            border-radius: 38px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 2px 16px 0 rgba(0,0,0,0.12);
+            background: #222831;
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+        }
+        .phone-notch {
+            width: 120px;
+            height: 18px;
+            background: #111;
+            border-radius: 0 0 18px 18px;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .phone-inner {
+            background: var(--bg);
+            border-radius: 26px;
+            min-height: 600px;
+            min-width: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 2rem;
+        }
+        /* Make sure the map fits inside the phone frame */
+        .phone-frame .map-container,
+        .phone-frame #map {
+            border-radius: 22px;
+        }
+        /* Optional: Hide scrollbars for a cleaner look */
+        .phone-inner::-webkit-scrollbar {
+            width: 0 !important;
+            background: transparent !important;
+        }
+        @media (max-width: 600px) {
+            .phone-frame {
+                max-width: 100vw;
+                border-width: 6px;
+                border-radius: 18px;
+            }
+            .phone-inner {
+                border-radius: 12px;
+            }
+        }
     </style>
 </head>
 
 <body>
+<div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-inner">
     <div class="header">
         <h1><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
     </div>
@@ -789,8 +849,8 @@
             <button class="tab-icon-btn" id="city-news-tab" title="City News">
                 <i class="fa-solid fa-newspaper"></i>
             </button>
-            <button class="tab-icon-btn" id="paid-adverts-tab" title="Paid Adverts">
-                <i class="fa-solid fa-bullhorn"></i>
+            <button class="tab-icon-btn" id="local-events-tab" title="Local Events & Establishments">
+                <i class="fa-solid fa-store"></i>
             </button>
             <button class="tab-icon-btn" id="my-adverts-tab" title="My Adverts" style="position:relative;">
                 <i class="fa-solid fa-user"></i>
@@ -805,12 +865,19 @@
             <!-- Remove old community-board-buttons from here -->
             <div class="public-announcements">
                 <h2 id="public-news-header">
-                    <i class="fa-solid fa-info-circle"></i> Public news
+                    <i class="fa-solid fa-bullhorn"></i> Public news
                 </h2>
                 <div class="news-feed" id="news-feed">
-                    <div class="news-item">
-                        <h3>Loading news...</h3>
-                        <p>Please wait while we fetch the latest updates.</p>
+                    <div class="news-item official expanded" style="border-left:4px solid #7b9e30;background:#f6fff0;">
+                        <h3 style="color:#7b9e30;margin-bottom:0.5em;">🌳 Community Park Renovation</h3>
+                        <p style="color:#3a5022;">
+                            The local community park will undergo renovation from June 10th to July 5th.<br>
+                            New playground equipment, benches, and lighting will be installed.<br>
+                            <br>
+                            <b>Note:</b> Some areas may be temporarily closed.<br>
+                            Thank you for your understanding!
+                        </p>
+                        <div class="date" style="color:#3a5022;">2025-06-01 • City Council</div>
                     </div>
                 </div>
                 <div id="news-dropdown" style="display:none;margin-top:0.5em;"></div>
@@ -917,8 +984,8 @@
         // Ensure #map is empty
         document.getElementById('map').innerHTML = '';
 
-        // Initialize the map
-        map = L.map('map', { zoomControl: true, attributionControl: true }).setView([39.47, -0.38], 13);
+        // Initialize the map with a 10 km radius view (approx. zoom level 12)
+        map = L.map('map', { zoomControl: true, attributionControl: true }).setView([39.447, -0.40], 15);
         window._leafletMap = map; // for compatibility with other code
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -987,6 +1054,53 @@
                     };
                 }
             }, 100);
+        });
+
+        // Sample news data
+        const startDate = new Date('2025-05-26');
+        const endDate = new Date('2025-08-08');
+
+        // 7 official news items in English
+        const sampleNews = [
+            {
+                title: "Community Park Renovation",
+                content: "The local community park will undergo renovation from June 10th to July 5th. New playground equipment, benches, and lighting will be installed. Some areas may be temporarily closed. Thank you for your understanding!",
+                date: "2025-06-01",
+                source: "City Council",
+                official: true
+            }
+        ];
+
+        // Sample public resource markers (1-2 for each type)
+        const samplePublicMarkers = [
+            // AED
+            { lat: 39.448, lng: -0.405, type: "aed", comment: "AED at Sports Center", thumbs: 0, foto: "", icon: "❤️" },
+            { lat: 39.449, lng: -0.40, type: "aed", comment: "Defibrillator at Mall Entrance", thumbs: 0, foto: "", icon: "❤️" },
+    
+            // Fuel
+            { lat: 39.446, lng: -0.406, type: "fuel", comment: "Fuel Station", thumbs: 0, foto: "", icon: "⛽" },
+            // Playgrounds
+            { lat: 39.448, lng: -0.409, type: "playgrounds", comment: "Children's Playground", thumbs: 2, foto: "", icon: "🏖️" },
+        ];
+
+        // Add sample public resource markers to the map and allMarkers
+        samplePublicMarkers.forEach(data => {
+            const icon = L.divIcon({
+                className: "custom-icon",
+                html: `<span style="font-size:28px;line-height:1;">${data.icon}</span>`,
+                iconSize: [48, 48],
+                iconAnchor: [24, 24],
+            });
+            const label = data.comment || data.type;
+            const html = `
+                <div class="popup">
+                <strong>${label}</strong><br>
+                <span style="font-size:1.2em;">${data.icon}</span>
+                </div>`;
+            const marker = L.marker([data.lat, data.lng], { icon }).addTo(map);
+            marker.bindPopup(html);
+            // Add to allMarkers with type for filtering
+            allMarkers.push({ marker, type: data.type });
         });
 
         // Filtering logic
@@ -1132,104 +1246,103 @@
         });
     </script>
     <script>
-        function showTypeSelection(latlng, accessType) {
-    // Define icons for each access type
-    const publicIcons = [
-        { type: 'water', icon: '💧' },
-        { type: 'aed', icon: '❤️' },
-        { type: 'atm', icon: '🏧' },
-        { type: 'medical', icon: '🏥' },
-        { type: 'fuel', icon: '⛽' }
-    ];
-    const communityIcons = [
-        { type: 'fruit', icon: '🍏' },
-        { type: 'car', icon: '🚗' },
-        { type: 'pet', icon: '🐕' },
-        { type: 'other', icon: '🛟' }
-    ];
+    function showTypeSelection(latlng, accessType) {
+        const publicIcons = [
+            { type: 'water', icon: '💧' },
+            { type: 'aed', icon: '❤️' },
+            { type: 'atm', icon: '🏧' },
+            { type: 'medical', icon: '🏥' },
+            { type: 'fuel', icon: '⛽' }
+        ];
+        const communityIcons = [
+            { type: 'fruit', icon: '🍏' },
+            { type: 'car', icon: '🚗' },
+            { type: 'pet', icon: '🐕' },
+            { type: 'other', icon: '🛟' }
+        ];
+        const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
 
-    // Pick which icons to show
-    const icons = accessType.toLowerCase() === 'public' ? publicIcons : communityIcons;
-
-    let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
-    icons.forEach(i => {
-        html += `<button class="icon-btn" data-type="${i.type}">${i.icon}</button> `;
-    });
-    html += `</div>`;
-
-    window.tempMarker.setPopupContent(html).openPopup();
-
-    setTimeout(() => {
-        // Prevent map click from firing when clicking inside the popup
-        const popupContent = document.getElementById('popup-content');
-        if (popupContent) {
-            popupContent.addEventListener('mousedown', function(e) {
-                L.DomEvent.stopPropagation(e);
-            });
-            popupContent.addEventListener('click', function(e) {
-                L.DomEvent.stopPropagation(e);
-            });
-        }
-        document.querySelectorAll('.icon-btn').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                showCommentForm(latlng, accessType, btn.dataset.type);
-            };
+        let html = `<div id="popup-content"><strong>Select Resource Type</strong><br>`;
+        icons.forEach(i => {
+            html += `<button class="icon-btn" data-type="${i.type}" type="button">${i.icon}</button> `;
         });
-    }, 100);
-}
+        html += `</div>`;
 
-function showCommentForm(latlng, accessType, type) {
-    // Only show checkboxes for community/private
-    const isCommunity = accessType.toLowerCase() === 'community';
-    const checkboxes = isCommunity ? `
-        <label><input type="checkbox" id="needBox"> Need</label>
-        <label><input type="checkbox" id="giveBox"> Give</label><br>
-    ` : '';
+        if (tempMarker) {
+            tempMarker.setPopupContent(html).openPopup();
+        }
 
-    const html = `
-        <div>
-            <strong>Add Details</strong><br>
-            ${checkboxes}
-            <input type="text" id="markerComment" placeholder="Optional comment"><br>
-            <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
-            <button id="addMarkerBtn">Add Marker</button>
-        </div>
-    `;
-    window.tempMarker.setPopupContent(html).openPopup();
-
-    setTimeout(() => {
-        document.getElementById('addMarkerBtn').onclick = () => {
-            const comment = document.getElementById('markerComment').value;
-            const foto = document.getElementById('markerPhoto').value;
-            // Get checkbox values if community
-            let need = false, give = false;
-            if (isCommunity) {
-                need = document.getElementById('needBox').checked;
-                give = document.getElementById('giveBox').checked;
+        setTimeout(() => {
+            // Use event delegation to ensure the buttons are clickable
+            const popupContent = document.getElementById('popup-content');
+            if (popupContent) {
+                popupContent.addEventListener('mousedown', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                });
+                popupContent.addEventListener('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    const btn = e.target.closest('.icon-btn');
+                    if (btn && btn.dataset.type) {
+                        showCommentForm(latlng, accessType, btn.dataset.type);
+                    }
+                });
             }
-            // Remove the temp marker first
-            if (window.tempMarker) {
-                map.removeLayer(window.tempMarker);
-                window.tempMarker = null;
+        }, 100);
+    }
+
+    function showCommentForm(latlng, accessType, type) {
+        const isCommunity = accessType.toLowerCase() === 'community';
+        const checkboxes = isCommunity ? `
+            <label><input type="checkbox" id="needBox"> Need</label>
+            <label><input type="checkbox" id="giveBox"> Give</label><br>
+        ` : '';
+
+        const html = `
+            <div>
+                <strong>Add Details</strong><br>
+                ${checkboxes}
+                <input type="text" id="markerComment" placeholder="Optional comment"><br>
+                <input type="url" id="markerPhoto" placeholder="Photo URL"><br>
+                <button id="addMarkerBtn" type="button">Add Marker</button>
+            </div>
+        `;
+        if (tempMarker) {
+            tempMarker.setPopupContent(html).openPopup();
+        }
+
+        setTimeout(() => {
+            const addBtn = document.getElementById('addMarkerBtn');
+            if (addBtn) {
+                addBtn.onclick = () => {
+                    const comment = document.getElementById('markerComment').value;
+                    const foto = document.getElementById('markerPhoto').value;
+                    let need = false, give = false;
+                    if (isCommunity) {
+                        need = document.getElementById('needBox').checked;
+                        give = document.getElementById('giveBox').checked;
+                    }
+                    if (tempMarker) {
+                        map.removeLayer(tempMarker);
+                        tempMarker = null;
+                    }
+                    const marker = {
+                        lat: latlng.lat,
+                        lng: latlng.lng,
+                        type: type.toLowerCase(),
+                        comment,
+                        thumbs: 0,
+                        foto,
+                        access: accessType,
+                        need,
+                        give
+                    };
+                    addMarker(marker, true);
+                };
             }
-            // Add the permanent marker with the selected icon and options
-            const marker = {
-                lat: latlng.lat,
-                lng: latlng.lng,
-                type: type.toLowerCase(),
-                comment,
-                thumbs: 0,
-                foto,
-                access: accessType,
-                need,
-                give
-            };
-            addMarker(marker, true);
-        };
-    }, 100);
-}
-    </script>
+        }, 100);
+    }
+    // ...existing code...
+</script>
 
     <script>
         // Date range for news
@@ -1239,12 +1352,34 @@ function showCommentForm(latlng, accessType, type) {
         // 7 official news items in English
         const sampleNews = [
             {
-                title: "National Crisis Exercise",
-                content: "A national crisis exercise will take place in Estonia on 03.06.2025. Short interruptions in communication and electricity services are possible.",
-                date: "2025-06-03",
-                source: "Estonian Rescue Board",
+                title: "Community Park Renovation",
+                content: "The local community park will undergo renovation from June 10th to July 5th. New playground equipment, benches, and lighting will be installed. Some areas may be temporarily closed. Thank you for your understanding!",
+                date: "2025-06-01",
+                source: "City Council",
                 official: true
             }
+        ];
+
+        // Sample public resource markers (1-2 for each type)
+        const samplePublicMarkers = [
+            // Water
+            { lat: 39.47, lng: -0.38, type: "water", comment: "Water Fountain at Central Park", thumbs: 2, foto: "", icon: "💧" },
+            { lat: 39.472, lng: -0.382, type: "water", comment: "Drinking Tap near Library", thumbs: 1, foto: "", icon: "🚰" },
+            // AED
+            { lat: 39.468, lng: -0.385, type: "aed", comment: "AED at Sports Center", thumbs: 0, foto: "", icon: "❤️" },
+            { lat: 39.469, lng: -0.39, type: "aed", comment: "Defibrillator at Mall Entrance", thumbs: 0, foto: "", icon: "⚡" },
+            // ATM
+            { lat: 39.471, lng: -0.384, type: "atm", comment: "ATM at Main Square", thumbs: 3, foto: "", icon: "🏧" },
+            { lat: 39.473, lng: -0.387, type: "atm", comment: "Cash Machine at Supermarket", thumbs: 1, foto: "", icon: "💵" },
+            // Medical
+            { lat: 39.474, lng: -0.381, type: "medical", comment: "24h Clinic", thumbs: 2, foto: "", icon: "🏥" },
+            { lat: 39.475, lng: -0.383, type: "medical", comment: "Pharmacy", thumbs: 1, foto: "", icon: "💊" },
+            // Fuel
+            { lat: 39.476, lng: -0.386, type: "fuel", comment: "Fuel Station", thumbs: 0, foto: "", icon: "⛽" },
+            { lat: 39.477, lng: -0.388, type: "fuel", comment: "EV Charger", thumbs: 0, foto: "", icon: "🔌" },
+            // Playgrounds
+            { lat: 39.478, lng: -0.389, type: "playgrounds", comment: "Children's Playground", thumbs: 2, foto: "", icon: "🛝" },
+            { lat: 39.479, lng: -0.39, type: "playgrounds", comment: "Sandbox Area", thumbs: 1, foto: "", icon: "🏖️" }
         ];
 
         // Sample cooperative news and community posts (merged)
@@ -1420,9 +1555,9 @@ function showCommentForm(latlng, accessType, type) {
                 event.preventDefault();
                 alert('Navigating to "City News" (not implemented yet)');
             });
-            document.getElementById('paid-adverts-tab').addEventListener('click', function (event) {
+            document.getElementById('local-events-tab').addEventListener('click', function (event) {
                 event.preventDefault();
-                alert('Navigating to "Paid Adverts" (not implemented yet)');
+                window.location.href = 'full-view.html';
             });
             document.getElementById('my-adverts-tab').addEventListener('click', function (event) {
                 event.preventDefault();
@@ -1609,7 +1744,8 @@ function showCommentForm(latlng, accessType, type) {
         }
     </script>
 
-    
+    </div>
+</div>
 
 </body>
 
