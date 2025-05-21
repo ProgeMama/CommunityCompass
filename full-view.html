@@ -34,23 +34,6 @@
             width: 100%;
         }
 
-        .user-type-btn {
-            background: var(--glass);
-            border: none;
-            border-radius: var(--radius);
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            color: var(--secondary);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
-            text-decoration: none;
-            /* Lisa see, et link ei oleks allajoonitud */
-        }
 
         .user-type-btn.active,
         .user-type-btn:hover {
@@ -59,29 +42,6 @@
             box-shadow: 0 4px 24px 0 rgba(255, 59, 48, 0.18);
         }
 
-
-        /* Väiksematel ekraanidel võib vaja olla kohandada */
-        @media (max-width: 600px) {
-            .user-type-selector {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .admin-link {
-                margin-left: 0;
-                margin-top: 1rem;
-                justify-content: flex-end;
-            }
-        }
-
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: var(--bg);
-            margin: 0;
-            min-height: 100vh;
-            color: var(--secondary);
-            transition: background 0.3s;
-        }
 
         .header {
             background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -136,29 +96,6 @@
             padding: 0 1rem;
         }
 
-        .user-type-selector {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .user-type-btn {
-            background: var(--glass);
-            border: none;
-            border-radius: var(--radius);
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            color: var(--secondary);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition), box-shadow var(--transition);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
-        }
 
         .user-type-btn.active,
         .user-type-btn:hover {
@@ -261,25 +198,6 @@
             color: #b45309;
         }
 
-        .emergency-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff;
-            padding: 1.2em 2.5em;
-            border-radius: 2em;
-            border: none;
-            font-size: 1.2em;
-            font-weight: 700;
-            box-shadow: 0 8px 32px 0 rgba(255, 59, 48, 0.18);
-            cursor: pointer;
-            z-index: 100;
-            transition: background var(--transition), box-shadow var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.7em;
-        }
 
         .emergency-button:hover {
             background: linear-gradient(90deg, var(--accent), var(--primary));
@@ -434,110 +352,90 @@
             }
 
 
-
-            @media (max-width: 600px) {
-                .admin-button-big {
-                    font-size: 1em;
-                    padding: 1em 1.2em;
-                }
-            }
         }
 
         /* Add this to your <style> section if you want popup buttons to be a bit smaller */
-.popup .user-type-btn {
-    font-size: 1em;
-    padding: 0.5em 1.2em;
-    margin: 0.3em 0;
-    width: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-}
+        .popup .user-type-btn {
+            font-size: 1em;
+            padding: 0.5em 1.2em;
+            margin: 0.3em 0;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+        }
 
-/* Nicer filter checkboxes under the map */
-#marker-filters {
-    margin: 1.5em 0;
-    text-align: center;
-    background: var(--glass);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.2em 2em;
-    display: inline-block;
-}
+        /* Nicer filter checkboxes under the map */
+        #marker-filters {
+            margin: 1.5em 0;
+            text-align: center;
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.2em 2em;
+            display: inline-block;
+        }
 
-#marker-filters strong {
-    font-size: 1.1em;
-    color: var(--primary);
-    margin-right: 1em;
-}
+        #marker-filters strong {
+            font-size: 1.1em;
+            color: var(--primary);
+            margin-right: 1em;
+        }
 
-#marker-filters label {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(0,0,0,0.03);
-    border-radius: 1.2em;
-    padding: 0.4em 1em 0.4em 0.7em;
-    margin: 0.2em 0.5em 0.2em 0;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    border: 1.5px solid transparent;
-}
+        #marker-filters label {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0,0,0,0.03);
+            border-radius: 1.2em;
+            padding: 0.4em 1em 0.4em 0.7em;
+            margin: 0.2em 0.5em 0.2em 0;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border: 1.5px solid transparent;
+        }
 
-#marker-filters label:hover, #marker-filters input:focus + label {
-    background: var(--accent);
-    color: #fff;
-}
+        #marker-filters label:hover, #marker-filters input:focus + label {
+            background: var(--accent);
+            color: #fff;
+        }
 
-#marker-filters input[type="checkbox"] {
-    accent-color: var(--primary);
-    width: 1.1em;
-    height: 1.1em;
-    margin-right: 0.5em;
-    border-radius: 0.3em;
-    border: 1.5px solid #bbb;
-    cursor: pointer;
-    transition: border 0.2s;
-}
+        #marker-filters input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 1.1em;
+            height: 1.1em;
+            margin-right: 0.5em;
+            border-radius: 0.3em;
+            border: 1.5px solid #bbb;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
 
-#marker-filters input[type="checkbox"]:checked + label {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-}
+        #marker-filters input[type="checkbox"]:checked + label {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
 
-#marker-filters > div {
-    margin-bottom: 0.5em;
-}
+        #marker-filters > div {
+            margin-bottom: 0.5em;
+        }
 
-@media (max-width: 600px) {
-    #marker-filters {
-        padding: 1em 0.5em;
-        font-size: 0.98em;
-    }
-    #marker-filters label {
-        font-size: 0.98em;
-        padding: 0.3em 0.7em 0.3em 0.5em;
-    }
-}
+        @media (max-width: 600px) {
+            #marker-filters {
+                padding: 1em 0.5em;
+                font-size: 0.98em;
+            }
+            #marker-filters label {
+                font-size: 0.98em;
+                padding: 0.3em 0.7em 0.3em 0.5em;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-
-    <div class="header">
-        <div class="lang-select">
-            <i class="fa-solid fa-globe"></i>
-            <select id="lang">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="et">Eesti</option>
-            </select>
-        </div>
-        <h1 id="app-title"><i class="fa-solid fa-shield-halved"></i> Community Compass</h1>
-        <p id="app-desc">Emergency Resource Locator & Community Safety (2025)</p>
-    </div>
     <div class="container">
         <div class="map-container">
             <div id="map"></div>
@@ -596,249 +494,7 @@
 </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script>
-        // Translation dictionary
-        const translations = {
-            en: {
-                appTitle: 'Community Compass',
-                appDesc: 'Emergency Resource Locator & Community Safety (2025)',
-                mapPlaceholder: 'Interactive Map Placeholder (Mapbox/Google Maps)',
-                userTypes: ['Local Resident', 'Tourist', 'Municipality', 'Emergency Contact'],
-                resources: [
-                    { name: 'Water Supply', location: 'Central Park', distance: '0.5 km', status: 'Available', statusClass: 'available' },
-                    { name: 'Generator Station', location: 'Main Street', distance: '0.8 km', status: 'Low Fuel', statusClass: 'partial' },
-                    { name: 'Medical Center', location: 'Hospital District', distance: '2.1 km', status: 'Available', statusClass: 'available' },
-                    { name: 'Emergency Fuel', location: '24/7 Gas Station', distance: '1.7 km', status: 'Unavailable', statusClass: 'unavailable' }
-                ],
-                adminText: 'Add/Edit Emergency Info',
-                resources: [
-
-                ],
-                sos: 'EMERGENCY SOS'
-            },
-            es: {
-                appTitle: 'Community Compass',
-                appDesc: 'Localizador de recursos de emergencia y seguridad comunitaria (2025)',
-                mapPlaceholder: 'Mapa interactivo (Mapbox/Google Maps)',
-                userTypes: ['Residente local', 'Turista', 'Municipalidad', 'Contacto de emergencia'],
-                resources: [
-                    { name: 'Punto de agua', location: 'Parque Central', distance: '0.5 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Refugio de emergencia', location: 'Centro Comunitario', distance: '1.2 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Estación de generador', location: 'Calle Principal', distance: '0.8 km', status: 'Combustible bajo', statusClass: 'partial' },
-                    { name: 'Centro médico', location: 'Distrito Hospitalario', distance: '2.1 km', status: 'Disponible', statusClass: 'available' },
-                    { name: 'Combustible de emergencia', location: 'Gasolinera 24/7', distance: '1.7 km', status: 'No disponible', statusClass: 'unavailable' }
-                ],
-                adminText: 'Añadir/Editar información de emergencia',
-                resources: [
-
-                ],
-                sos: 'EMERGENCIA SOS'
-            },
-            et: {
-                appTitle: 'Community Compass',
-                appDesc: 'Hädaabi ressursside kaart & kogukonna turvalisus (2025)',
-                mapPlaceholder: 'Interaktiivne kaart (Mapbox/Google Maps)',
-                userTypes: ['Kohalik elanik', 'Turist', 'Omavalitsus', 'Hädaabi kontakt'],
-                resources: [
-                    { name: 'Veevõtukoht', location: 'Kesklinna park', distance: '0,5 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Varjupaik', location: 'Kogukonnakeskus', distance: '1,2 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Generaatori jaam', location: 'Peatänav', distance: '0,8 km', status: 'Vähe kütust', statusClass: 'partial' },
-                    { name: 'Meditsiinikeskus', location: 'Haigla piirkond', distance: '2,1 km', status: 'Saadaval', statusClass: 'available' },
-                    { name: 'Hädaabi kütus', location: '24/7 Tankla', distance: '1,7 km', status: 'Pole saadaval', statusClass: 'unavailable' }
-                ],
-                adminText: 'Lisa või muuda hädaabi infot',
-                resources: [
-
-                ],
-                sos: 'HÄDAABI SOS'
-            }
-        };
-
-        // Language switcher
-        const langSelect = document.getElementById('lang');
-        function updateLang(lang) {
-            const t = translations[lang];
-            document.getElementById('app-title').innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${t.appTitle}`;
-            document.getElementById('app-desc').textContent = t.appDesc;
-            document.getElementById('map-placeholder').textContent = t.mapPlaceholder;
-            // User types
-            document.querySelector('.ut-resident').textContent = t.userTypes[0];
-            document.querySelector('.ut-tourist').textContent = t.userTypes[1];
-            document.querySelector('.ut-municipality').textContent = t.userTypes[2];
-            document.querySelector('.ut-contact').textContent = t.userTypes[3];
-            document.querySelector('.ut-admin').textContent = t.adminText;
-
-            // Resources
-            const res = t.resources;
-            document.querySelector('.rc-water').textContent = res[0].name;
-            document.querySelector('.rc-water-location').textContent = res[0].location;
-            document.querySelector('.rc-water-distance').textContent = res[0].distance;
-            document.querySelector('.rc-water-status').textContent = res[0].status;
-            document.querySelector('.rc-water-status').className = `status rc-water-status ${res[0].statusClass}`;
-
-            document.querySelector('.rc-generator').textContent = res[2].name;
-            document.querySelector('.rc-generator-location').textContent = res[2].location;
-            document.querySelector('.rc-generator-distance').textContent = res[2].distance;
-            document.querySelector('.rc-generator-status').textContent = res[2].status;
-            document.querySelector('.rc-generator-status').className = `status rc-generator-status ${res[2].statusClass}`;
-
-            document.querySelector('.rc-medical').textContent = res[3].name;
-            document.querySelector('.rc-medical-location').textContent = res[3].location;
-            document.querySelector('.rc-medical-distance').textContent = res[3].distance;
-            document.querySelector('.rc-medical-status').textContent = res[3].status;
-            document.querySelector('.rc-medical-status').className = `status rc-medical-status ${res[3].statusClass}`;
-
-            document.querySelector('.rc-fuel').textContent = res[4].name;
-            document.querySelector('.rc-fuel-location').textContent = res[4].location;
-            document.querySelector('.rc-fuel-distance').textContent = res[4].distance;
-            document.querySelector('.rc-fuel-status').textContent = res[4].status;
-            document.querySelector('.rc-fuel-status').className = `status rc-fuel-status ${res[4].statusClass}`;
-
-            document.querySelector('.sos-btn').textContent = t.sos;
-
-            document.querySelector('[data-type="admin"]').addEventListener('click', function () {
-                window.location.href = 'admin.html';
-            });
-        }
-        langSelect.addEventListener('change', e => updateLang(e.target.value));
-        // Initial language
-        updateLang('en');
-
-        // User type selection
-        document.querySelectorAll('.user-type-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-        // Emergency button
-        document.querySelector('.emergency-button').addEventListener('click', () => {
-            alert('Emergency services have been notified of your location!');
-        });
-        // Simulate status update
-        setInterval(() => {
-            const statuses = document.querySelectorAll('.status');
-            statuses.forEach(status => {
-                if (Math.random() > 0.92) {
-                    if (status.classList.contains('available')) {
-                        status.classList.remove('available');
-                        status.classList.add('partial');
-                        status.textContent = langSelect.value === 'es' ? 'Combustible bajo' : langSelect.value === 'et' ? 'Vähe kütust' : 'Low Fuel';
-                    } else if (status.classList.contains('partial')) {
-                        status.classList.remove('partial');
-                        status.classList.add('unavailable');
-                        status.textContent = langSelect.value === 'es' ? 'No disponible' : langSelect.value === 'et' ? 'Pole saadaval' : 'Unavailable';
-                    } else if (status.classList.contains('unavailable')) {
-                        status.classList.remove('unavailable');
-                        status.classList.add('available');
-                        status.textContent = langSelect.value === 'es' ? 'Disponible' : langSelect.value === 'et' ? 'Saadaval' : 'Available';
-                    }
-                }
-            });
-        }, 6000);
-        // Auth functionality
-        let isLoggedIn = false;
-        const loginBtn = document.getElementById('loginBtn');
-        const adminPanel = document.getElementById('adminPanel');
-        const loginModal = document.getElementById('loginModal');
-        const resourceModal = document.getElementById('resourceModal');
-        const addResourceBtn = document.getElementById('addResourceBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        // Show/hide modals
-        loginBtn.onclick = () => loginModal.style.display = "block";
-        addResourceBtn.onclick = () => resourceModal.style.display = "block";
-
-        // Close modals when clicking (x) or outside
-        document.querySelectorAll('.close').forEach(closeBtn => {
-            closeBtn.onclick = function () {
-                loginModal.style.display = "none";
-                resourceModal.style.display = "none";
-            }
-        });
-
-        window.onclick = function (event) {
-            if (event.target == loginModal || event.target == resourceModal) {
-                loginModal.style.display = "none";
-                resourceModal.style.display = "none";
-            }
-        }
-
-        // Tab switching in login modal
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.onclick = function () {
-                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                if (this.dataset.tab === 'login') {
-                    document.getElementById('loginForm').style.display = 'flex';
-                    document.getElementById('registerForm').style.display = 'none';
-                } else {
-                    document.getElementById('loginForm').style.display = 'none';
-                    document.getElementById('registerForm').style.display = 'flex';
-                }
-            }
-        });
-
-        // Handle login
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            // Here you would normally validate against a backend
-            if (email && password) {
-                isLoggedIn = true;
-                loginBtn.style.display = 'none';
-                adminPanel.style.display = 'flex';
-                loginModal.style.display = 'none';
-                alert('Logged in successfully!');
-            }
-        }
-
-        // Handle register
-        function handleRegister() {
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regPasswordConfirm').value;
-
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
-
-            // Here you would normally send to a backend
-            alert('Registered successfully! Please log in.');
-            document.querySelector('[data-tab="login"]').click();
-        }
-
-        // Handle logout
-        logoutBtn.onclick = () => {
-            isLoggedIn = false;
-            loginBtn.style.display = 'block';
-            adminPanel.style.display = 'none';
-            alert('Logged out successfully!');
-        }
-
-        // Handle adding new resource
-        function handleAddResource() {
-            const type = document.getElementById('resourceType').value;
-            const name = document.getElementById('resourceName').value;
-            const location = document.getElementById('resourceLocation').value;
-            const lat = document.getElementById('resourceLat').value;
-            const lng = document.getElementById('resourceLng').value;
-            const status = document.getElementById('resourceStatus').value;
-            const description = document.getElementById('resourceDescription').value;
-
-            if (type && name && location && lat && lng && status) {
-                // Here you would normally send to a backend
-                alert('Resource added successfully!');
-                resourceModal.style.display = 'none';
-            } else {
-                alert('Please fill in all required fields!');
-            }
-        }
         
-    </script>
     <script>
         // Initialize the Leaflet map
         const map = L.map('map').setView([39.47, -0.38], 13); // Centered on Valencia
