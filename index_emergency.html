@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+    <!-- ...existing code... -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ff3b30;
             --secondary: #222831;
             --accent: #7b9e30;
-            --bg: antiquewhite;
+            --bg: rgb(246, 246, 246);
             --glass: rgba(255, 255, 255, 0.7);
             --glass-dark: rgba(34, 40, 49, 0.7);
             --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
@@ -22,7 +24,7 @@
         }
 
         body {
-            font-family: 'Inter', Arial, sans-serif;
+            font-family: 'Open Sans', Arial, sans-serif;
             background: var(--bg);
             margin: 0;
             min-height: 100vh;
@@ -31,30 +33,75 @@
             flex-direction: column;
             align-items: center;
             padding: 2rem 0;
+            font-size: 1.25em; /* Increased from default */
         }
 
         .header {
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: #169c79;
             color: #fff;
             padding: 1.5rem;
             text-align: center;
-            border-radius: var(--radius);
+            border-radius: 0; /* Changed from var(--radius) to straight edges */
             box-shadow: var(--shadow);
-            width: 90%;
-            max-width: 800px;
+            width: 100%; /* Full width of phone-inner */
+            max-width: none;
             margin-bottom: 2rem;
+            font-family: 'Source Code Pro', monospace;
+            box-sizing: border-box;
+            font-size: 1.25em; /* Added for larger header text */
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.5rem; /* Increased from 2rem */
             margin: 0;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1400px;
             margin: 2rem auto;
             padding: 0 1rem;
+            font-size: 1.1em; /* Slightly larger */
         }
+
+        /* Add: Make tab-bar and tab-icon-btns fill width */
+        .tab-bar {
+            display: flex;
+            gap: 0.5em; /* Reduced from 1em */
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tab-icon-btn {
+            flex: 1 1 0;
+            min-width: 0;
+            width: 100%;
+            max-width: 210px;
+            height: 210px; /* Larger height for more space */
+            aspect-ratio: 2 / 1;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #e6e9f0, #eef1f5);
+            border: 2px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1em; /* Increased from 1.7em */
+            color: #003073;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s, color 0.2s;
+            position: relative;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .tab-icon-btn span {
+            color: #003073 !important;
+            font-family: 'Open Sans', Arial, sans-serif !important;
+            font-size: 0.6em !important; /* Reduced further */
+        }
+
         .map-container {
             width: 100%;
             height: 320px;
@@ -68,50 +115,61 @@
             height: 100%;
             border-radius: var(--radius);
             z-index: 1;
-        }   
+        }
 
         .info-section {
             background: var(--glass);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 1.5rem;
+            padding: 1.2rem; /* Reduced from 1.5rem */
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 1.2rem; /* Reduced from 2rem */
+            font-size: 1.1em; /* Slightly larger */
         }
 
-        .public-announcements,
-        .community-board {
-            flex: 1 1 0;
-            background: #f6eee7;
-            /* light gray background */
+        .public-announcements {
+            border: 2.5px solid #ff3b30;   /* Red border */
+            background: #fff;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 1.5rem 1rem;
-            margin: 0;
-            min-width: 0;
+            padding: 1.2rem 1rem; /* Reduced from 1.5rem 1rem */
+            margin: 0 0 0.7em 0;  /* Reduced bottom margin */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .community-board {
+            border: none;                   /* Remove red border */
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
         }
 
         .public-announcements h2,
         .community-board h3 {
-            color: var(--primary);
+            color: #003073;
             margin-top: 0;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 1.2rem;
+            font-size: 1.5rem; /* Increased from 1.2rem */
         }
 
         .public-announcements h2 {
-            font-size: 1.2rem;
+            border: 2.5px solid #ff3b30;   /* Red border */
+
+            font-size: 1.5rem; /* Increased from 1.2rem */
         }
 
         .community-board h3 {
-            font-size: 1.2rem;
+            font-size: 1.5rem; /* Increased from 1.2rem */
         }
 
         .news-feed {
@@ -126,8 +184,21 @@
         }
 
         .news-item.official {
-            border-left: 3px solid var(--primary);
-            padding-left: 1rem;
+            /* Remove the red border */
+            border-left: none;
+            padding-left: 4.2em; /* Add space for the icon */
+            position: relative;
+        }
+        .news-item.official::before {
+            content: "⚡";
+            color: #ff3b30;
+            font-size: 2.0em;
+            position: absolute;
+            left: 0.4em;
+            top: 0.5em;
+            line-height: 1;
+            font-weight: bold;
+            pointer-events: none;
         }
 
         .news-item.expanded {
@@ -136,13 +207,13 @@
 
         .news-item h3 {
             margin: 0 0 0.5rem 0;
-            font-size: 1.1rem;
+            font-size: 1.3rem; /* Increased from 1.1rem */
             color: var(--secondary);
         }
 
         .news-item p {
             margin: 0;
-            font-size: 0.9rem;
+            font-size: 1.1rem; /* Increased from 0.9rem */
             color: #555;
             display: none;
         }
@@ -152,7 +223,7 @@
         }
 
         .news-item .date {
-            font-size: 0.8rem;
+            font-size: 1rem; /* Increased from 0.8rem */
             color: #777;
         }
 
@@ -165,8 +236,9 @@
         }
 
         .community-board h3 {
-            color: #3a5022;
+            color: #7b9e30;
             margin-bottom: 0.5rem;
+            font-size: 1.4em;
         }
 
         .community-board ul {
@@ -181,6 +253,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 1em;
+            font-size: 1.1em; /* Slightly larger */
         }
 
         .community-board li:last-child {
@@ -193,7 +266,7 @@
             border: none;
             border-radius: 1em;
             padding: 0.3em 0.8em;
-            font-size: 0.9em;
+            font-size: 1.1em; /* Increased from 0.9em */
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
         }
@@ -253,7 +326,7 @@
 
         .chat-modal .chat-header {
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.3em; /* Increased from 1.1em */
             color: var(--primary);
             margin-bottom: 0.5em;
             display: flex;
@@ -268,7 +341,7 @@
             max-height: 200px;
             overflow-y: auto;
             padding: 0.7em;
-            font-size: 0.97em;
+            font-size: 1.1em; /* Increased from 0.97em */
             color: #222;
         }
 
@@ -287,7 +360,7 @@
             padding: 0.5em;
             border-radius: 0.5em;
             border: 1px solid #ccc;
-            font-size: 1em;
+            font-size: 1.1em; /* Increased from 1em */
         }
 
         .chat-modal .chat-input-row button {
@@ -296,7 +369,7 @@
             border: none;
             border-radius: 0.5em;
             padding: 0.5em 1em;
-            font-size: 1em;
+            font-size: 1.1em; /* Increased from 1em */
             cursor: pointer;
         }
 
@@ -318,7 +391,6 @@
             margin-left: 0.5em;
         }
 
-        
 
         @media (max-width: 600px) {
             .chat-modal,
@@ -332,7 +404,7 @@
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 1000px) {
             .container {
                 padding: 0 0.3rem;
             }
@@ -354,482 +426,148 @@
         .public-announcements h2#public-news-header {
             cursor: pointer;
             width: auto;
-            /* Remove width:100% so it fits the box's padding */
-            background: #3a5022;
-            color: #fff;
+            background: #fff;              /* White background */
+            color: #ff3b30;                /* Red text */
             border-radius: var(--radius);
-            padding: 0.8em 1em;
-            margin-bottom: 1.2em;
+            padding: 0.3em 1.0em;
+            margin-bottom: 0.30em;
             margin-left: -1rem;
             margin-right: -1rem;
-            /* Extend header to match box padding */
             font-size: 1.3em;
             display: flex;
             align-items: center;
             gap: 0.7em;
             transition: background 0.2s, color 0.2s;
+            border: 0px solid #ff3b30;     /* Optional: add red border for emphasis */
         }
 
         .public-announcements h2#public-news-header:hover,
         .public-announcements h2#public-news-header.active {
-            background: #abb99b;
-            color: #3a5022;
-            border-radius: #3a5022;
-            /* forest green */
-            color: #fff;
+            background: #ffeaea;           /* Light red background on hover/active */
+            color: #ff3b30;
         }
 
-        .tab-icon-btn {
-            width: 144px;
-            height: 144px;
-            border-radius: 50%;
-            background: #f6eee7;
-            border: 2px solid #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.7em;
-            color: #222;
-            cursor: pointer;
-            transition: background 0.2s, border 0.2s, color 0.2s;
-            position: relative;
-            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /* Set a custom image for each tab button */
-        #city-news-tab {
-            background-image: url('city-news.png');
-        }
-
-        #paid-adverts-tab {
-            background-image: url('paid-adverts.png');
-        }
-
-        #my-adverts-tab {
-            background-image: url('my-adverts.png');
-        }
-
-        /* Show the icon */
-        #city-news-tab i {
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -55%);
-            font-size: 3.5em;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        #paid-adverts-tab i {
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -55%);
-            font-size: 3.5em;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        #my-adverts-tab i {
-            display: block;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -55%);
-            font-size: 3.5em;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        /* Hide the icon if you want only the image to show */
-        .tab-icon-btn i {
-            display: none;
-        }
-
-        .notification-badge {
-            min-width: 1.5em;
-            min-height: 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            position: absolute;
-            top: 50%;
-            right: -1.2em;
-            /* Move fully outside the circle to the right */
-            transform: translateY(-50%);
-            background: #ff3b30;
-            color: #fff;
-            border-radius: 1em;
-            padding: 0.1em 0.6em;
-            z-index: 3;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        
+        /* Change tab-icon-btn from circle to square with rounded edges */
 
 
-.resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
 
-        .resource-card {
-            background: var(--glass);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 1.5rem 1.2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.7em;
-            backdrop-filter: blur(8px);
-            position: relative;
-            transition: box-shadow var(--transition), transform var(--transition);
-        }
+        /* Ensure water API markers remain as water drops */
+        /* This is handled in the JS:
+           The icon for water API markers uses 💧 and a white circle background.
+           No CSS change needed here, just keep the JS code that sets the icon as 💧 in a white circle.
+        */
 
-        .resource-card:hover {
-            box-shadow: 0 8px 32px 0 rgba(0, 173, 181, 0.18);
-            transform: translateY(-4px) scale(1.02);
-        }
-
-        .resource-card h3 {
-            margin: 0 0 0.2em 0;
-            font-size: 1.2rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-        }
-
-        .resource-card p {
-            margin: 0.1em 0;
-            font-size: 1em;
-            color: #333;
-            opacity: 0.85;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 0.4em 1.1em;
-            border-radius: 1em;
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-top: 0.5em;
-            letter-spacing: 0.02em;
-            background: #e0e7ef;
-            color: #222;
-            transition: background var(--transition), color var(--transition);
-        }
-
-        .status.available {
-            background: #d1fae5;
-            color: #059669;
-        }
-
-        .status.unavailable {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .status.partial {
-            background: #fef9c3;
-            color: #b45309;
-        }
-
-
-        .emergency-button:hover {
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            box-shadow: 0 12px 40px 0 rgba(0, 173, 181, 0.18);
-        }
-
-        @media (max-width: 800px) {
-            .container {
-                padding: 0 0.3rem;
-            }
-
-            .map-container {
-                height: 180px;
-            }
-
-            .lang-select {
-                right: 1rem;
-                top: 0.7rem;
-            }
-
-            /* Persona buttons enhancement */
-            .user-type-selector {
-                background: var(--glass);
-                padding: 1.5rem;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-                margin: 2rem auto;
-                max-width: 900px;
-            }
-
-            .user-type-btn {
-                min-width: 200px;
-                padding: 1rem 2rem;
-                font-size: 1.1rem;
-                border: 2px solid transparent;
-            }
-
-            .user-type-btn:hover {
-                border-color: var(--accent);
-                transform: translateY(-2px);
-            }
-
-            /* Auth styles */
-            .auth-container {
-                position: absolute;
-                top: 1.2rem;
-                left: 2rem;
-                z-index: 10;
-            }
-
-            .auth-btn {
-                background: var(--glass);
-                border: none;
-                border-radius: 1.2em;
-                padding: 0.7em 1.5em;
-                color: var(--secondary);
-                cursor: pointer;
-                font-size: 1em;
-                display: flex;
-                align-items: center;
-                gap: 0.5em;
-                transition: all 0.3s ease;
-            }
-
-            .auth-btn:hover {
-                background: var(--primary);
-                color: white;
-            }
-
-            /* Modal styles */
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1000;
-            }
-
-            .modal-content {
-                position: relative;
-                background: var(--bg);
-                margin: 5% auto;
-                padding: 2rem;
-                width: 90%;
-                max-width: 500px;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow);
-            }
-
-            .close {
-                position: absolute;
-                right: 1rem;
-                top: 1rem;
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-
-            .auth-form {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                margin-top: 1rem;
-            }
-
-            .auth-form input,
-            .auth-form select,
-            .auth-form textarea {
-                padding: 0.8rem;
-                border: 1px solid #ddd;
-                border-radius: 0.5rem;
-                font-size: 1rem;
-            }
-
-            .auth-tabs {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .auth-tab {
-                padding: 0.5rem 1rem;
-                cursor: pointer;
-                border: none;
-                background: var(--glass);
-                border-radius: 0.5rem;
-            }
-
-            .auth-tab.active {
-                background: var(--primary);
-                color: white;
-            }
-
-            .submit-btn {
-                background: var(--primary);
-                color: white;
-                border: none;
-                padding: 1rem;
-                border-radius: 0.5rem;
-                cursor: pointer;
-                font-size: 1rem;
-                font-weight: bold;
-            }
-
-
-        }
-
-        /* Add this to your <style> section if you want popup buttons to be a bit smaller */
-        .popup .user-type-btn {
-            font-size: 1em;
-            padding: 0.5em 1.2em;
-            margin: 0.3em 0;
-            width: auto;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5em;
-        }
-
-        /* Nicer filter checkboxes under the map */
         #marker-filters {
-            margin: 1.5em 0;
+            margin: 1em 0;
             text-align: center;
-            background: var(--glass);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 1.2em 2em;
+            background: #f6eee7;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.07);
+            padding: 1.2em 0.8em;
             display: inline-block;
-        }
-
-        #marker-filters strong {
-            font-size: 1.1em;
-            color: var(--primary);
-            margin-right: 1em;
+            width: 100%;
+            max-width: 1200px;
         }
 
         #marker-filters label {
             display: inline-flex;
             align-items: center;
-            background: rgba(0,0,0,0.03);
+            gap: 0.4em;
+            background: #fff;
             border-radius: 1.2em;
-            padding: 0.4em 1em 0.4em 0.7em;
-            margin: 0.2em 0.5em 0.2em 0;
-            font-size: 1em;
+            padding: 0.25em 0.9em 0.25em 0.7em;
+            margin: 0.2em 0.3em;
+            font-size: 1.15em; /* Increased from 1em */
+            color: #003073;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.06);
             cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-            border: 1.5px solid transparent;
+            transition: background 0.18s, color 0.18s;
+            border: 1px solid #e0e0e0;
         }
 
-        #marker-filters label:hover, #marker-filters input:focus + label {
-            background: var(--accent);
-            color: #fff;
+        #marker-filters label:hover,
+        #marker-filters label:focus-within {
+            background: #e6e9f0;
+            color: #169c79;
         }
 
         #marker-filters input[type="checkbox"] {
-            accent-color: var(--primary);
+            accent-color: #169c79;
             width: 1.1em;
             height: 1.1em;
-            margin-right: 0.5em;
+            margin-right: 0.3em;
             border-radius: 0.3em;
-            border: 1.5px solid #bbb;
-            cursor: pointer;
-            transition: border 0.2s;
+            border: 1.5px solid #b0b0b0;
+            outline: none;
+            transition: border 0.15s;
         }
 
-        #marker-filters input[type="checkbox"]:checked + label {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
+        #marker-filters strong {
+            color: #003073;
+            font-size: 1.18em; /* Increased from 1.08em */
+            margin-right: 0.7em;
+            font-family: 'Open Sans', Arial, sans-serif;
         }
 
-        #marker-filters > div {
-            margin-bottom: 0.5em;
-        }
-
-        @media (max-width: 600px) {
+        @media (max-width: 800px) {
             #marker-filters {
-                padding: 1em 0.5em;
-                font-size: 0.98em;
+                padding: 0.7em 0.2em;
+                font-size: 1.05em; /* Increased from 0.98em */
             }
+
             #marker-filters label {
-                font-size: 0.98em;
-                padding: 0.3em 0.7em 0.3em 0.5em;
+                font-size: 1.05em; /* Increased from 0.98em */
+                padding: 0.18em 0.7em 0.18em 0.5em;
             }
         }
 
+        /* Phone frame styles */
         .phone-frame {
-            max-width: 430px;
-            min-width: 320px;
-            margin: 2.5rem auto;
-            border: 12px solid #222831;
-            border-radius: 38px;
-            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 2px 16px 0 rgba(0,0,0,0.12);
             background: #222831;
+            border-radius: 38px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 1.5px 0 #fff inset;
+            padding: 18px 8px 18px 8px;
+            margin: 0 auto 2em auto;
+            width: 75vw; /* Fill 3/4 of the viewport width */
+            max-width: 1200px;
+            min-width: 320px;
             position: relative;
-            overflow: hidden;
-            padding: 0;
+            min-height: 740px;
+            box-sizing: border-box;
         }
         .phone-notch {
             width: 120px;
             height: 18px;
             background: #111;
             border-radius: 0 0 18px 18px;
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
+            margin: 0 auto 8px auto;
+            position: relative;
+            z-index: 2;
         }
         .phone-inner {
             background: var(--bg);
-            border-radius: 26px;
-            min-height: 600px;
-            min-width: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
+            border-radius: 30px;
+            min-height: 700px;
+            box-shadow: 0 2px 8px 0 rgba(31,38,135,0.08);
+            padding-bottom: 2em;
+            overflow: hidden;
             position: relative;
-            box-sizing: border-box;
-            padding-bottom: 2rem;
+            width: 100%;
         }
-        /* Make sure the map fits inside the phone frame */
-        .phone-frame .map-container,
-        .phone-frame #map {
-            border-radius: 22px;
-        }
-        /* Optional: Hide scrollbars for a cleaner look */
-        .phone-inner::-webkit-scrollbar {
-            width: 0 !important;
-            background: transparent !important;
-        }
-        @media (max-width: 600px) {
+        @media (max-width: 900px) {
             .phone-frame {
+                width: 98vw;
                 max-width: 100vw;
-                border-width: 6px;
-                border-radius: 18px;
+                min-width: 0;
+                border-radius: 0;
+                padding: 0;
             }
             .phone-inner {
-                border-radius: 12px;
+                border-radius: 0;
+                min-height: 0;
+            }
+            .phone-notch {
+                display: none;
             }
         }
     </style>
@@ -844,18 +582,21 @@
     </div>
 
     <!-- Tabs above public news -->
-    <div class="container" style="margin-bottom: 1.5rem;">
-        <div class="tab-bar" style="display: flex; gap: 1em; justify-content: center; margin-bottom: 0.5em;">
+    <div class="container" style="margin-bottom: 3.0rem;">
+        <div class="tab-bar" style="display: flex; gap: 0.5em; justify-content: center; margin-bottom: 0.5em; width: 100%;">
             <button class="tab-icon-btn" id="city-news-tab" title="City News">
-                <i class="fa-solid fa-newspaper"></i>
+                <img src="ajaleht.png" alt="Local news" style="width:2.2em; height:2.2em; margin-bottom:0.1em;" />
+                <span style="margin-top:0.3em; font-size:0.3em; font-family:'Open Sans',sans-serif;">Local news</span>
             </button>
             <button class="tab-icon-btn" id="local-events-tab" title="Local Events & Establishments">
-                <i class="fa-solid fa-store"></i>
+                <img src="ruupur.png" alt="Events & offers" style="width:2.2em; height:2.2em; margin-bottom:0.1em;" />
+                <span style="margin-top:0.3em; font-size:0.3em; font-family:'Open Sans',sans-serif;">Events & offers</span>
             </button>
             <button class="tab-icon-btn" id="my-adverts-tab" title="My Adverts" style="position:relative;">
-                <i class="fa-solid fa-user"></i>
+                <img src="ymbrik.png" alt="Messages" style="width:2.2em; height:2.2em; margin-bottom:0.1em;" />
                 <span id="my-adverts-badge" class="notification-badge"
                     style="display:none; position:absolute; top:0.2em; right:0.2em; background:#ff3b30; color:#fff; border-radius:1em; font-size:0.8em; padding:0.1em 0.6em;">0</span>
+                <span style="margin-top:0.3em; font-size:0.3em; font-family:'Open Sans',sans-serif;">Messages</span>
             </button>
         </div>
     </div>
@@ -865,18 +606,10 @@
             <!-- Remove old community-board-buttons from here -->
             <div class="public-announcements">
                 <h2 id="public-news-header">
-                    <i class="fa-solid fa-bullhorn"></i> Public news
-                </h2>
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:1.7em; color:#ff3b30; margin-right:0.2em; vertical-align:middle;"></i> Public Announcements                </h2>
                 <div class="news-feed" id="news-feed">
                     <div class="news-item official expanded" style="border-left:4px solid #7b9e30;background:#f6fff0;">
-                        <h3 style="color:#7b9e30;margin-bottom:0.5em;">🌳 Community Park Renovation</h3>
-                        <p style="color:#3a5022;">
-                            The local community park will undergo renovation from June 10th to July 5th.<br>
-                            New playground equipment, benches, and lighting will be installed.<br>
-                            <br>
-                            <b>Note:</b> Some areas may be temporarily closed.<br>
-                            Thank you for your understanding!
-                        </p>
+
                         <div class="date" style="color:#3a5022;">2025-06-01 • City Council</div>
                     </div>
                 </div>
@@ -969,6 +702,9 @@
     let allMarkers = [];
     let tempMarker = null;
 
+    // Store API markers separately to ensure they are always present
+    let apiMarkers = [];
+
     function fixMapSize() {
         setTimeout(() => {
             if (map) map.invalidateSize();
@@ -1038,7 +774,10 @@
                                 </div>`;
                             const marker = L.marker([markerData.lat, markerData.lng], { icon }).addTo(map);
                             marker.bindPopup(html);
-                            allMarkers.push({ marker, type: markerData.type });
+                            // Add to both allMarkers and apiMarkers for filtering
+                            const markerObj = { marker, type: markerData.type, isApi: true };
+                            allMarkers.push(markerObj);
+                            apiMarkers.push(markerObj);
                         }
                     });
                 }
@@ -1087,16 +826,7 @@
         const startDate = new Date('2025-05-26');
         const endDate = new Date('2025-08-08');
 
-        // 7 official news items in English
-        const sampleNews = [
-            {
-                title: "Community Park Renovation",
-                content: "The local community park will undergo renovation from June 10th to July 5th. New playground equipment, benches, and lighting will be installed. Some areas may be temporarily closed. Thank you for your understanding!",
-                date: "2025-06-01",
-                source: "City Council",
-                official: true
-            }
-        ];
+
 
         // Sample public resource markers (1-2 for each type)
         const samplePublicMarkers = [
@@ -1146,11 +876,20 @@
         document.querySelectorAll('.filter-checkbox').forEach(cb => {
             cb.addEventListener('change', function() {
                 const enabledTypes = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => cb.value.toLowerCase());
+                // Always keep API water markers if "water" is checked
                 allMarkers.forEach(obj => {
-                    if (enabledTypes.includes(obj.type)) {
-                        map.addLayer(obj.marker);
+                    if (obj.isApi && obj.type === "water") {
+                        if (enabledTypes.includes("water")) {
+                            map.addLayer(obj.marker);
+                        } else {
+                            map.removeLayer(obj.marker);
+                        }
                     } else {
-                        map.removeLayer(obj.marker);
+                        if (enabledTypes.includes(obj.type)) {
+                            map.addLayer(obj.marker);
+                        } else {
+                            map.removeLayer(obj.marker);
+                        }
                     }
                 });
             });
@@ -1237,8 +976,92 @@
     function startChat(id) {
         alert("Chat feature coming soon for marker: " + id);
     }
-    // ...existing code...
-</script>
+    // --- Community Board Animated Reveal Logic ---
+    let revealedCommunityBoard = [];
+    let revealIndex = 0;
+    let communityBoardInterval;
+
+    // Add CSS animation for new community items only once
+    if (!document.getElementById('communityBoardAnimationKeyframes')) {
+        const style = document.createElement('style');
+        style.id = 'communityBoardAnimationKeyframes';
+        style.innerHTML = `
+        @keyframes communityItemFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.98);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(8px) scale(1.01);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .community-item-new {
+            animation: communityItemFadeIn 0.7s cubic-bezier(.23,1.02,.53,.97);
+            background: #fffbe7;
+            box-shadow: 0 2px 12px 0 rgba(255, 200, 0, 0.09);
+            z-index: 1;
+        }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function renderCommunityBoardAnimated(newItemIndex = null) {
+        const boardList = document.getElementById('community-board-list');
+        boardList.innerHTML = '';
+
+        if (revealedCommunityBoard.length === 0) {
+            boardList.innerHTML = '<li>No posts or announcements available.</li>';
+            return;
+        }
+
+        revealedCommunityBoard.forEach((item, index) => {
+            const listItem = document.createElement('li');
+            let meta = item.date;
+            if (item.author) meta += ' • ' + item.author;
+            listItem.innerHTML = `
+                <div>
+                    <strong>${item.title}</strong><br>
+                    <span style="font-size:0.95em;color:#555;">${item.content}</span><br>
+                    <span class="date" style="font-size:0.85em;color:#888;">${meta}</span>
+                </div>
+                ${item.type !== 'announcement' ? '<button class="reply-button">Reply</button>' : ''}
+            `;
+            // Animate only the newest item just added (index 0)
+            if (newItemIndex !== null && index === newItemIndex) {
+                listItem.classList.add('community-item-new');
+                listItem.addEventListener('animationend', () => {
+                    listItem.classList.remove('community-item-new');
+                }, { once: true });
+            }
+            boardList.appendChild(listItem);
+        });
+
+        attachReplyChatHandlers();
+    }
+
+    function revealNextCommunityAnnouncementAnimated() {
+        if (revealIndex < sampleCommunityBoard.length) {
+            revealedCommunityBoard.unshift(sampleCommunityBoard[revealIndex]);
+            renderCommunityBoardAnimated(0); // Animate the new top item
+            revealIndex++;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // ...existing code...
+        // Start with no messages revealed
+        revealedCommunityBoard = [];
+        renderCommunityBoardAnimated();
+        revealIndex = 0;
+        communityBoardInterval = setInterval(revealNextCommunityAnnouncementAnimated, 10000);
+        // ...existing code...
+    });
+    </script>
 
     <script>
 
@@ -1391,8 +1214,8 @@
         // 7 official news items in English
         const sampleNews = [
             {
-                title: "Community Park Renovation",
-                content: "The local community park will undergo renovation from June 10th to July 5th. New playground equipment, benches, and lighting will be installed. Some areas may be temporarily closed. Thank you for your understanding!",
+                title: "  Power Outage in the City",
+                content: "A major power outage is affecting several districts. Crews are working to restore electricity. Please stay tuned for updates and avoid using elevators until power is restored.",
                 date: "2025-06-01",
                 source: "City Council",
                 official: true
@@ -1424,84 +1247,180 @@
         // Sample cooperative news and community posts (merged)
         const sampleCommunityBoard = [
             {
-                title: "New Parking Regulations",
-                content: "Please be aware of the new parking regulations starting July 1st.",
-                date: "2025-06-20",
-                type: "announcement"
-            },
-            {
-                title: "Upcoming Building Maintenance",
-                content: "Building maintenance scheduled for June 28th. Expect some noise.",
-                date: "2025-06-25",
-                type: "announcement"
-            },
-            {
-                title: "Selling: Gently Used Bicycle",
-                content: "Selling a gently used bicycle for 50 EUR. Contact John at Apt 2B.",
-                date: "2025-06-18",
-                type: "sale"
-            },
-            {
-                title: "Offering: Free Piano Lessons",
-                content: "Offering free piano lessons to beginners. Contact Jane at Apt 3A.",
-                date: "2025-06-22",
-                type: "offer"
-            },
-            {
-                title: "Extra tomatoes from my garden",
-                content: "I have a basket of fresh tomatoes to give away. Pick up in the evening.",
-                date: "2025-06-10",
+                title: "Ice Cream Melting! 🍦",
+                content: "Power's out and my freezer is down. Anyone want to come over for an ice cream party before it all melts? Apt 4C.",
+                date: "2025-06-01",
                 type: "give",
-                author: "Anna"
+                author: "Maria"
             },
             {
-                title: "Need help fixing my bike",
-                content: "My bike chain broke. Anyone with tools or experience to help?",
-                date: "2025-06-12",
+                title: "Where's the nearest public water tap?",
+                content: "Does anyone know where I can refill water bottles nearby? No water at home.",
+                date: "2025-06-01",
                 type: "need",
-                author: "Markus"
+                author: "Alex"
+            },
+            {
+                title: "Check the Community Map",
+                content: "You can find public water taps and other resources on the community map below.",
+                date: "2025-06-01",
+                type: "info",
+                author: "Sophie"
+            },
+            {
+                title: "Elevator Out of Service",
+                content: "Reminder: Please avoid using the elevator during the outage. Use stairs for safety.",
+                date: "2025-06-01",
+                type: "announcement",
+                author: "Building Management"
+            },
+            {
+                title: "Phone Charging Station",
+                content: "I have a power bank and solar charger available in Apt 2A if anyone needs to charge their phone.",
+                date: "2025-06-01",
+                type: "offer",
+                author: "Liam"
+            },
+            {
+                title: "Candle Swap",
+                content: "I have extra candles and matches if anyone needs some. Happy to trade for snacks!",
+                date: "2025-06-01",
+                type: "offer",
+                author: "Nina"
+            },
+            {
+                title: "Stay Cool",
+                content: "Keep windows open for ventilation and check on elderly neighbors. Let’s help each other out!",
+                date: "2025-06-01",
+                type: "info",
+                author: "Building Management"
             }
         ];
 
-        // --- Community Board Reveal Logic ---
-        let revealedCommunityBoard = [sampleCommunityBoard[0]];
-        let revealIndex = 1;
-
-        function renderCommunityBoard() {
-            const boardList = document.getElementById('community-board-list');
-            boardList.innerHTML = '';
-            // Show messages in order, newest at the top
-            revealedCommunityBoard.slice().reverse().forEach(item => {
-                const listItem = document.createElement('li');
-                let meta = item.date;
-                if (item.author) meta += ' • ' + item.author;
-                listItem.innerHTML = `
-                    <div>
-                        <strong>${item.title}</strong><br>
-                        <span style="font-size:0.95em;color:#555;">${item.content}</span><br>
-                        <span class="date" style="font-size:0.85em;color:#888;">${meta}</span>
-                    </div>
-                    ${item.type !== 'announcement' ? '<button class="reply-button">Reply</button>' : ''}
-                `;
-                boardList.appendChild(listItem);
-            });
-            attachReplyChatHandlers();
+        // Function to check if a date is within the specified range
+        function isDateInRange(dateString, startDate, endDate) {
+            const date = new Date(dateString);
+            return date >= startDate && date <= endDate;
         }
 
-        function revealNextCommunityAnnouncement() {
-            if (revealIndex < sampleCommunityBoard.length) {
-                revealedCommunityBoard.unshift(sampleCommunityBoard[revealIndex]);
-                revealIndex++;
-                renderCommunityBoard();
+        // Function to load news
+        function loadNews() {
+            const newsFeed = document.getElementById('news-feed');
+            const newsDropdown = document.getElementById('news-dropdown');
+            newsFeed.innerHTML = '';
+
+            // Sort by date (newest first)
+            const sortedNews = sampleNews
+                .filter(item => isDateInRange(item.date, startDate, endDate))
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (sortedNews.length === 0) {
+                newsFeed.innerHTML = '<div class="news-item"><h3>No announcements</h3></div>';
+                newsDropdown.style.display = 'none';
+                return;
+            }
+
+            // Show only the first announcement
+            const first = sortedNews[0];
+            const firstNewsItem = document.createElement('div');
+            firstNewsItem.className = `news-item ${first.official ? 'official' : ''}`;
+            firstNewsItem.innerHTML = `
+                <h3>${first.title}</h3>
+                <p>${first.content}</p>
+                <div class="date">${first.date} • ${first.source}</div>
+            `;
+            firstNewsItem.addEventListener('click', function () {
+                this.classList.toggle('expanded');
+            });
+            newsFeed.appendChild(firstNewsItem);
+
+            // If more, prepare the rest but don't show button
+            if (sortedNews.length > 1) {
+                newsDropdown.style.display = 'none';
+                newsDropdown.innerHTML = '';
+                for (let i = 1; i < sortedNews.length; ++i) {
+                    const item = sortedNews[i];
+                    const newsItem = document.createElement('div');
+                    newsItem.className = `news-item ${item.official ? 'official' : ''}`;
+                    newsItem.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <p>${item.content}</p>
+                        <div class="date">${item.date} • ${item.source}</div>
+                    `;
+                    newsItem.addEventListener('click', function () {
+                        this.classList.toggle('expanded');
+                    });
+                    newsDropdown.appendChild(newsItem);
+                }
+            } else {
+                newsDropdown.style.display = 'none';
+            }
+        }
+
+        // Function to load community board (merged cooperative news and posts)
+
+        // Example: Set this to the number of new messages for "My Adverts"
+        let myAdvertsMessages = 2; // Set to 0 for no badge
+
+        function updateMyAdvertsBadge() {
+            const badge = document.getElementById('my-adverts-badge');
+            if (myAdvertsMessages > 0) {
+                badge.textContent = myAdvertsMessages;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ...existing code...
-            renderCommunityBoard();
-            // ...existing code...
-            setInterval(revealNextCommunityAnnouncement, 10000);
-            // ...existing code...
+            loadNews();
+            loadCommunityBoard();
+            updateMyAdvertsBadge();
+
+            // Change: open a new page on header click
+            const header = document.getElementById('public-news-header');
+            header.onclick = function () {
+                window.location.href = 'public-news.html';
+            };
+            header.onmouseenter = function () {
+                header.classList.add('active');
+            };
+            header.onmouseleave = function () {
+                header.classList.remove('active');
+            };
+
+            // Tab click handlers
+            document.getElementById('city-news-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                alert('Navigating to "City News" (not implemented yet)');
+            });
+            document.getElementById('local-events-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                window.location.href = 'full-view.html';
+            });
+            document.getElementById('my-adverts-tab').addEventListener('click', function (event) {
+                event.preventDefault();
+                alert('Navigating to "My Adverts" (not implemented yet)');
+            });
+
+            // Make minimize and close functional for the chatbox
+            document.getElementById('closeChatBtn').onclick = function () {
+                document.getElementById('chatModal').classList.remove('active', 'minimized');
+            };
+            document.getElementById('minimizeChatBtn').onclick = function (e) {
+                e.stopPropagation();
+                const chatModal = document.getElementById('chatModal');
+                chatModal.classList.toggle('minimized');
+            };
+            document.getElementById('chatHeader').onclick = function () {
+                const chatModal = document.getElementById('chatModal');
+                if (chatModal.classList.contains('minimized')) {
+                    chatModal.classList.remove('minimized');
+                }
+            };
+            window.addEventListener('keydown', function (e) {
+                if (e.key === "Escape") document.getElementById('chatModal').classList.remove('active', 'minimized');
+            });
         });
 
         // Navigation
