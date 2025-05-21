@@ -719,27 +719,26 @@
     <button class="notif-close" onclick="document.getElementById('notificationPopup').classList.remove('show')">&times;</button>
 </div>
 <script>
-    // On load, show phone full screen, then zoom in to 3/4 after a longer delay
+    // Remove initial zoom on load
     document.body.classList.remove('phone-zoomed');
-    window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            document.body.classList.add('phone-zoomed');
-        }, 200); // Start animation after 200ms
-    });
 
-    // Show the notification popup only after a user clicks on the phone-frame
     let notifTimeout;
     let clickCount = 0;
     document.querySelector('.phone-frame').addEventListener('click', function handlePhoneClick() {
         clickCount++;
-        if (clickCount === 1 && !notifTimeout) {
+        if (clickCount === 1) {
+            // Start zoom animation on first click
+            document.body.classList.add('phone-zoomed');
+        } else if (clickCount === 2 && !notifTimeout) {
+            // Show notification on second click
             notifTimeout = setTimeout(function() {
                 document.getElementById('notificationPopup').classList.add('show');
                 setTimeout(function() {
                     document.getElementById('notificationPopup').classList.remove('show');
                 }, 6000);
-            }, 1200); // Notification appears 1.2s after first click
-        } else if (clickCount === 2) {
+            }, 200); // Notification appears shortly after second click
+        } else if (clickCount === 3) {
+            // Go to emergency page on third click
             window.location.href = 'index_emergency.html';
         }
     });
