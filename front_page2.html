@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Compass - Landing Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- ...existing code... -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3b30;
+            --secondary: #222831;
+            --accent: #7b9e30;
+            --bg: rgb(246, 246, 246);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-dark: rgba(34, 40, 49, 0.7);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            --radius: 22px;
+        }
+
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background: #fff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        .header {
+            background: #169c79;
+            color: #fff;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 0; /* Changed from var(--radius) to straight edges */
+            box-shadow: var(--shadow);
+            width: 100%; /* Full width of phone-inner */
+            max-width: none;
+            margin-bottom: 2rem;
+            font-family: 'Source Code Pro', monospace;
+            box-sizing: border-box;
+            font-size: 1.25em; /* Added for larger header text */
+        }
+
+        .header h1 {
+            font-size: 2.5rem; /* Increased from 2rem */
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            font-size: 1.1em; /* Slightly larger */
+        }
+
+        /* Add: Make tab-bar and tab-icon-btns fill width */
+        .tab-bar {
+            display: flex;
+            gap: 0.5em; /* Reduced from 1em */
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tab-icon-btn {
+            flex: 1 1 0;
+            min-width: 0;
+            width: 100%;
+            max-width: 210px;
+            height: 210px; /* Larger height for more space */
+            aspect-ratio: 2 / 1;
+            border-radius: 18px;
+            background: linear-gradient(90deg, #e6e9f0, #eef1f5);
+            border: 2px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1em; /* Increased from 1.7em */
+            color: #003073;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s, color 0.2s;
+            position: relative;
+            box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .tab-icon-btn span {
+            color: #003073 !important;
+            font-family: 'Open Sans', Arial, sans-serif !important;
+            font-size: 0.6em !important; /* Reduced further */
+        }
+
+        .map-container {
+            width: 100%;
+            height: 320px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius);
+            z-index: 1;
+        }
+
+        .info-section {
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.2rem; /* Reduced from 1.5rem */
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem; /* Reduced from 2rem */
+            font-size: 1.1em; /* Slightly larger */
+        }
+
+        .public-announcements {
+            border: 2.5px solid #ff3b30;   /* Red border */
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.2rem 1rem; /* Reduced from 1.5rem 1rem */
+            margin: 0 0 0.7em 0;  /* Reduced bottom margin */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .community-board {
+            border: none;                   /* Remove red border */
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 1rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .public-announcements h2,
+        .community-board h3 {
+            color: #003073;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem; /* Increased from 1.2rem */
+        }
+
+        .public-announcements h2 {
+            border: 2.5px solid #ff3b30;   /* Red border */
+
+            font-size: 1.5rem; /* Increased from 1.2rem */
+        }
+
+        .community-board h3 {
+            font-size: 1.5rem; /* Increased from 1.2rem */
+        }
+
+        .news-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .news-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .news-item.official {
+            /* Remove the red border */
+            border-left: none;
+            padding-left: 4.2em; /* Add space for the icon */
+            position: relative;
+        }
+        .news-item.official::before {
+            content: "⚡";
+            color: #ff3b30;
+            font-size: 2.0em;
+            position: absolute;
+            left: 0.4em;
+            top: 0.5em;
+            line-height: 1;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .news-item.expanded {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .news-item h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.3rem; /* Increased from 1.1rem */
+            color: var(--secondary);
+        }
+
+        .news-item p {
+            margin: 0;
+            font-size: 1.1rem; /* Increased from 0.9rem */
+            color: #555;
+            display: none;
+        }
+
+        .news-item.expanded p {
+            display: block;
+        }
+
+        .news-item .date {
+            font-size: 1rem; /* Increased from 0.8rem */
+            color: #777;
+        }
+
+        .community-board {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .community-board h3 {
+            color: #7b9e30;
+            margin-bottom: 0.5rem;
+            font-size: 1.4em;
+        }
+
+        .community-board ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .community-board li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1em;
+            font-size: 1.1em; /* Slightly larger */
+        }
+
+        .community-board li:last-child {
+            border-bottom: none;
+        }
+
+        .community-board .reply-button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 1em;
+            padding: 0.3em 0.8em;
+            font-size: 1.1em; /* Increased from 0.9em */
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .community-board .reply-button:hover,
+        .community-board .reply-button:focus {
+            background: #bcf4f7;
+            color: var(--accent);
+        }
+
+        /* Chat modal styles */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            right: 2vw;
+            bottom: 2vw;
+            width: 340px;
+            max-width: 95vw;
+            height: auto;
+            background: none;
+            justify-content: flex-end;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .chat-modal.active {
+            display: flex;
+            pointer-events: auto;
+        }
+
+        .chat-modal .chat-content {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 420px;
+            max-width: 95vw;
+            min-height: 180px;
+            max-height: 70vh;
+            padding: 1.2em 1em 1em 1em;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            position: relative;
+            transition: box-shadow 0.2s;
+        }
+
+        .chat-modal.minimized .chat-content {
+            height: 2.5em;
+            min-height: 0;
+            max-height: 2.5em;
+            overflow: hidden;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            gap: 0;
+        }
+
+        .chat-modal .chat-header {
+            font-weight: bold;
+            font-size: 1.3em; /* Increased from 1.1em */
+            color: var(--primary);
+            margin-bottom: 0.5em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-modal .chat-messages {
+            background: #f6eee7;
+            border-radius: 0.7em;
+            min-height: 120px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.7em;
+            font-size: 1.1em; /* Increased from 0.97em */
+            color: #222;
+        }
+
+        .chat-modal.minimized .chat-messages,
+        .chat-modal.minimized .chat-input-row {
+            display: none;
+        }
+
+        .chat-modal .chat-input-row {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .chat-modal .chat-input-row input {
+            flex: 1;
+            padding: 0.5em;
+            border-radius: 0.5em;
+            border: 1px solid #ccc;
+            font-size: 1.1em; /* Increased from 1em */
+        }
+
+        .chat-modal .chat-input-row button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 0.5em;
+            padding: 0.5em 1em;
+            font-size: 1.1em; /* Increased from 1em */
+            cursor: pointer;
+        }
+
+        .chat-modal .close-chat {
+            font-size: 1.3em;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 0.5em;
+        }
+
+        .chat-modal .minimize-chat {
+            font-size: 1.1em;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 0.5em;
+        }
+
+
+        @media (max-width: 600px) {
+            .chat-modal,
+            .chat-modal .chat-content {
+                width: 98vw;
+                min-width: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                border-radius: 0.7em 0.7em 0 0;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                padding: 0 0.3rem;
+            }
+
+            .map-container {
+                height: 180px;
+            }
+
+
+        }
+
+        @media (max-width: 900px) {
+            .info-section {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+
+        .public-announcements h2#public-news-header {
+            cursor: pointer;
+            width: auto;
+            background: #fff;              /* White background */
+            color: #ff3b30;                /* Red text */
+            border-radius: var(--radius);
+            padding: 0.3em 1.0em;
+            margin-bottom: 0.30em;
+            margin-left: -1rem;
+            margin-right: -1rem;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 0.7em;
+            transition: background 0.2s, color 0.2s;
+            border: 0px solid #ff3b30;     /* Optional: add red border for emphasis */
+        }
+
+        .public-announcements h2#public-news-header:hover,
+        .public-announcements h2#public-news-header.active {
+            background: #ffeaea;           /* Light red background on hover/active */
+            color: #ff3b30;
+        }
+
+        /* Change tab-icon-btn from circle to square with rounded edges */
+
+
+
+        /* Ensure water API markers remain as water drops */
+        /* This is handled in the JS:
+           The icon for water API markers uses 💧 and a white circle background.
+           No CSS change needed here, just keep the JS code that sets the icon as 💧 in a white circle.
+        */
+
+        #marker-filters {
+            margin: 1em 0;
+            text-align: center;
+            background: #f6eee7;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px 0 rgba(31,38,135,0.07);
+            padding: 1.2em 0.8em;
+            display: inline-block;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        #marker-filters label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            background: #fff;
+            border-radius: 1.2em;
+            padding: 0.25em 0.9em 0.25em 0.7em;
+            margin: 0.2em 0.3em;
+            font-size: 1.15em; /* Increased from 1em */
+            color: #003073;
+            box-shadow: 0 1px 4px 0 rgba(31, 38, 135, 0.06);
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+            border: 1px solid #e0e0e0;
+        }
+
+        #marker-filters label:hover,
+        #marker-filters label:focus-within {
+            background: #e6e9f0;
+            color: #169c79;
+        }
+
+        #marker-filters input[type="checkbox"] {
+            accent-color: #169c79;
+            width: 1.1em;
+            height: 1.1em;
+            margin-right: 0.3em;
+            border-radius: 0.3em;
+            border: 1.5px solid #b0b0b0;
+            outline: none;
+            transition: border 0.15s;
+        }
+
+        #marker-filters strong {
+            color: #003073;
+            font-size: 1.18em; /* Increased from 1.08em */
+            margin-right: 0.7em;
+            font-family: 'Open Sans', Arial, sans-serif;
+        }
+
+        @media (max-width: 800px) {
+            #marker-filters {
+                padding: 0.7em 0.2em;
+                font-size: 1.05em; /* Increased from 0.98em */
+            }
+
+            #marker-filters label {
+                font-size: 1.05em; /* Increased from 0.98em */
+                padding: 0.18em 0.7em 0.18em 0.5em;
+            }
+        }
+
+        /* Phone frame styles */
+        .phone-frame {
+            background: #222831;
+            border-radius: 38px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18), 0 1.5px 0 #fff inset;
+            padding: 18px 8px 18px 8px;
+            margin: 0 auto 2em auto;
+            width: 1125px;
+            height: 2436px; /* iPhone X/11/12/13/14 height */
+            max-width: 1125px;
+            min-width: 320px;
+            position: relative;
+            min-height: 812px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transform: scaleY(1);
+            transition: transform 10s cubic-bezier(.23,1.02,.53,.97), height 10s;
+        }
+        body.phone-zoomed .phone-frame {
+            width: 1125px !important;
+            height: 2436px !important;
+            max-width: 1125px;
+            max-height: 2436px;
+            min-width: 320px;
+            min-height: 812px;
+            transform: scaleY(1);
+        }
+        body:not(.phone-zoomed) .phone-frame {
+            width: 1125px !important;
+            height: 100vh !important;
+            max-width: none;
+            max-height: none;
+            min-width: 0;
+            min-height: 0;
+            transform: scaleY(1);
+        }
+        .phone-notch {
+            width: 120px;
+            height: 18px;
+            background: #111;
+            border-radius: 0 0 18px 18px;
+            margin: 0 auto 8px auto;
+            position: relative;
+            z-index: 2;
+        }
+        .phone-inner {
+            background: url('cover.gif') no-repeat center center;
+            background-size: cover;
+            border-radius: 30px;
+            min-height: 740px;
+            box-shadow: none;
+            padding-bottom: 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        /* Lock screen look */
+        .lock-time {
+            color: #fff;
+            font-size: 4em;
+            font-weight: 600;
+            margin-top: 70px;
+            margin-bottom: 0.1em;
+            text-align: center;
+            letter-spacing: 0.04em;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .lock-date {
+            color: #e0e0e0;
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 2em;
+            letter-spacing: 0.08em;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .lock-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            padding: 0 1.5em;
+            color: #fff;
+            font-size: 1.1em;
+            opacity: 0.85;
+        }
+        .lock-unlock {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 2.2em;
+            opacity: 0.7;
+            text-align: center;
+        }
+        .lock-home-indicator {
+            width: 120px;
+            height: 5px;
+            background-color: #fff;
+            border-radius: 3px;
+            margin: 0 auto 18px auto;
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            opacity: 0.7;
+        }
+        @media (max-width: 900px) {
+            .phone-frame {
+                width: 100vw;
+                max-width: 100vw;
+                min-width: 0;
+                border-radius: 0;
+                padding: 0;
+                height: 100vh;
+                max-height: 100vh;
+                min-height: 0;
+            }
+            .phone-inner {
+                border-radius: 0;
+                min-height: 0;
+                height: 100vh;
+            }
+            .phone-notch {
+                display: none;
+            }
+        }
+
+        .notification-popup {
+            position: fixed;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4000;
+            min-width: 320px;
+            max-width: 90vw;
+            background: rgba(255,255,255,0.97);
+            color: #222831;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px 0 rgba(31,38,135,0.18);
+            padding: 1.1em 1.5em 1.1em 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            font-size: 1.15em;
+            border-left: 7px solid #ff3b30;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        .notification-popup.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .notification-popup .notif-icon {
+            font-size: 2em;
+            color: #ff3b30;
+            margin-right: 0.6em;
+        }
+        .notification-popup .notif-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5em;
+            cursor: pointer;
+            margin-left: 1em;
+        }
+    </style>
+</head>
+
+<body>
+<div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-inner">
+        <!-- All inner content removed, only phone borders remain -->
+    </div>
+</div>
+<!-- Notification dummy -->
+<div id="notificationPopup" class="notification-popup">
+    <span class="notif-icon"><i class="fa-solid fa-bell"></i></span>
+    <div>
+        <strong>Community Compass</strong><br>
+        <span id="notifMessage">⚡ Power outage: Several districts are currently without electricity. Crews are working to restore service. Please avoid using elevators and stay tuned for updates.</span>
+    </div>
+    <button class="notif-close" onclick="document.getElementById('notificationPopup').classList.remove('show')">&times;</button>
+</div>
+<script>
+    // On load, show phone full screen, then zoom in to 3/4 after a longer delay
+    document.body.classList.remove('phone-zoomed');
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            document.body.classList.add('phone-zoomed');
+        }, 200); // Start animation after 200ms
+    });
+
+    // Show the notification popup only after a user clicks on the phone-frame
+    let notifTimeout;
+    let clickCount = 0;
+    document.querySelector('.phone-frame').addEventListener('click', function handlePhoneClick() {
+        clickCount++;
+        if (clickCount === 1 && !notifTimeout) {
+            notifTimeout = setTimeout(function() {
+                document.getElementById('notificationPopup').classList.add('show');
+                setTimeout(function() {
+                    document.getElementById('notificationPopup').classList.remove('show');
+                }, 6000);
+            }, 1200); // Notification appears 1.2s after first click
+        } else if (clickCount === 2) {
+            window.location.href = 'index_emergency.html';
+        }
+    });
+</script>
+</body>
+</html>
