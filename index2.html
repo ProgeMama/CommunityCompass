@@ -24,8 +24,10 @@
             align-items: center;
         }
         .iphone-frame {
-            width: 402px;
-            height: 874px;
+            width: 75vw; /* Fill 3/4 of the viewport width */
+            max-width: 804px;
+            min-width: 320px;
+            height: 1748px;
             background: #18191a;
             border-radius: 60px;
             position: relative;
@@ -236,7 +238,7 @@
 
         // Make the Community Compass app icon clickable
         document.getElementById('community-compass-app').addEventListener('click', function() {
-            window.location.href = 'community-compass.html';
+            window.location.href = 'index_emergency.html';
         });
     </script>
 </body>
