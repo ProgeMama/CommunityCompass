@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=402, initial-scale=1.0">
@@ -13,6 +14,7 @@
             --accent: #00adb5;
             --bg: #f0f0f0;
         }
+
         body {
             font-family: 'Inter', Arial, sans-serif;
             margin: 0;
@@ -23,21 +25,22 @@
             justify-content: center;
             align-items: center;
         }
+
         .iphone-frame {
-            width: 75vw; /* Fill 3/4 of the viewport width */
+            width: 75vw;
             max-width: 804px;
             min-width: 320px;
             height: 1748px;
             background: #18191a;
             border-radius: 60px;
             position: relative;
-            box-shadow: 0 10px 40px 0 rgba(0,0,0,0.5), 0 0 0 12px #222;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5), 0 0 0 12px #222;
             overflow: visible;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        /* Dynamic Island */
+
         .dynamic-island {
             position: absolute;
             top: 22px;
@@ -48,38 +51,43 @@
             background: #111;
             border-radius: 18px;
             z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        /* Side buttons */
+
         .side-button {
             position: absolute;
             width: 5px;
             background: #444;
             border-radius: 3px;
         }
+
         .side-button.power {
             height: 60px;
             right: -13px;
             top: 120px;
         }
+
         .side-button.volup {
             height: 40px;
             left: -13px;
             top: 100px;
         }
+
         .side-button.voldown {
             height: 40px;
             left: -13px;
             top: 160px;
         }
+
         .side-button.silent {
             height: 20px;
             left: -13px;
             top: 70px;
         }
+
         .phone-screen {
             position: absolute;
             top: 16px;
@@ -92,6 +100,7 @@
             display: flex;
             flex-direction: column;
         }
+
         .status-bar {
             background: transparent;
             color: #222;
@@ -103,23 +112,36 @@
             align-items: flex-end;
             z-index: 2;
         }
+
         .status-bar .time {
             font-weight: bold;
         }
+
         .status-bar .icons {
             display: flex;
             gap: 8px;
         }
+
+        .app-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin-top: 180px;
+        }
+
         .top-app {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 60px;
             margin-bottom: 0;
         }
+
         .top-app .app-icon {
             margin-bottom: 8px;
         }
+
         .app-icon {
             display: flex;
             flex-direction: column;
@@ -128,9 +150,11 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
+
         .app-icon:hover {
             transform: scale(1.05);
         }
+
         .app-icon .icon {
             width: 74px;
             height: 74px;
@@ -139,34 +163,61 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.13);
             font-size: 36px;
         }
+
         .app-icon .name {
             font-size: 16px;
             text-align: center;
             color: var(--secondary);
         }
-        .community-compass {
+
+        .icon.large-icon {
+            width: 110px;
+            height: 110px;
+            border-radius: 28px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
+            padding: 0;
         }
+
+        .cc-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 20px;
+            background: white;
+            display: block;
+        }
+
+        .community-compass {
+            /* background removed, now handled by .large-icon */
+        }
+
         .camera {
             background: #9C27B0;
             color: white;
         }
+
         .settings {
             background: #FF5722;
             color: white;
         }
+
         .bottom-apps {
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            flex: 1;
             margin-bottom: 60px;
             gap: 60px;
+            margin-top: 40px;
+            /* Nihutab Camera ja Settings allapoole */
         }
+
         .home-indicator {
             width: 120px;
             height: 5px;
@@ -174,11 +225,15 @@
             border-radius: 3px;
             margin: 0 auto 18px auto;
         }
+
         @media (max-width: 500px) {
-            .iphone-frame { transform: scale(0.8);}
+            .iphone-frame {
+                transform: scale(0.8);
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="iphone-frame">
         <div class="dynamic-island"></div>
@@ -187,40 +242,39 @@
         <div class="side-button voldown"></div>
         <div class="side-button silent"></div>
         <div class="phone-screen">
-    <div class="status-bar">
-        <div class="time" id="current-time">12:30</div>
-        <div class="icons">
-            <i class="fa-solid fa-signal"></i>
-            <i class="fa-solid fa-wifi"></i>
-            <i class="fa-solid fa-battery-three-quarters"></i>
-        </div>
-    </div>
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-        <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:38px;">
-            <div class="app-icon" id="community-compass-app">
-                <div class="icon community-compass">
-                    <i class="fa-solid fa-shield-halved"></i>
+            <div class="status-bar">
+                <div class="time" id="current-time">12:30</div>
+                <div class="icons">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-three-quarters"></i>
                 </div>
-                <div class="name">Community Compass</div>
             </div>
-        </div>
-        <div style="display:flex; flex-direction:row; gap:60px; align-items:center; justify-content:center;">
-            <div class="app-icon">
-                <div class="icon camera">
-                    <i class="fa-solid fa-camera"></i>
+            <div class="app-group">
+                <div class="top-app">
+                    <div class="app-icon" id="community-compass-app">
+                        <div class="icon community-compass large-icon">
+                            <img src="community_compass_icon.png" alt="Community Compass" class="cc-img">
+                        </div>
+                        <div class="name">Community Compass</div>
+                    </div>
                 </div>
-                <div class="name">Camera</div>
-            </div>
-            <div class="app-icon">
-                <div class="icon settings">
-                    <i class="fa-solid fa-gear"></i>
+                <div class="bottom-apps">
+                    <div class="app-icon">
+                        <div class="icon camera">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <div class="name">Camera</div>
+                    </div>
+                    <div class="app-icon">
+                        <div class="icon settings">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+                        <div class="name">Settings</div>
+                    </div>
                 </div>
-                <div class="name">Settings</div>
             </div>
-        </div>
-    </div>
-    <div class="home-indicator"></div>
-</div>
+            <div class="home-indicator"></div>
         </div>
     </div>
     <script>
@@ -237,9 +291,10 @@
         setInterval(updateTime, 60000);
 
         // Make the Community Compass app icon clickable
-        document.getElementById('community-compass-app').addEventListener('click', function() {
+        document.getElementById('community-compass-app').addEventListener('click', function () {
             window.location.href = 'index_emergency.html';
         });
     </script>
 </body>
+
 </html>
